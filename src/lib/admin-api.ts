@@ -69,10 +69,21 @@ export async function getAllUsers(): Promise<ManagedUser[]> {
 
 // ── Invite user by email ──────────────────────────────────────────────────────
 export async function inviteUser(email: string): Promise<{ success: boolean; error?: string }> {
-  const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${window.location.origin}/auth/callback`,
+  // Get the current user's session token
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return { success: false, error: "Not authenticated" };
+
+  const res = await fetch("/api/invite", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({ email }),
   });
-  if (error) return { success: false, error: error.message };
+
+  const data = await res.json();
+  if (!res.ok) return { success: false, error: data.error };
   return { success: true };
 }
 
