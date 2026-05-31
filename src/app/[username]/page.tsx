@@ -116,7 +116,7 @@ export default function UserPortfolioPage() {
       <SkillsSection />
       <EducationSection />
       <DocumentsSection />
-      <ContactSection />
+      <ContactSection /> 
       <footer className="border-t border-border bg-secondary/30">
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-muted-foreground text-sm">

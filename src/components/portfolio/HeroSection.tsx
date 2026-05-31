@@ -165,8 +165,7 @@ export function HeroSection() {
   ].filter((s) => s.url);
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-
+  <section id="hero" className="relative min-h-screen flex items-center pt-16 overflow-hidden scroll-mt-20">
       {/* Background grid */}
       <div className="absolute inset-0 opacity-40"
         style={{
