@@ -50,7 +50,7 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-
+{/* 
             <Button variant="outline" className="w-full" onClick={handleGoogle} disabled={gLoading} type="button">
               {gLoading ? <Loader2 size={15} className="animate-spin" /> : (
                 <svg width="16" height="16" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ export default function LoginPage() {
               <div className="relative flex justify-center">
                 <span className="text-xs text-muted-foreground bg-card px-3">or with email</span>
               </div>
-            </div>
+            </div> */}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
