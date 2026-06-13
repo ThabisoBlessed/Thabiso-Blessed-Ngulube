@@ -13,6 +13,7 @@ import { AdminSkillsPanel } from "@/components/admin/AdminSkillsPanel";
 import { AdminEmploymentPanel } from "@/components/admin/AdminEmploymentPanel";
 import { AdminProjectsPanel } from "@/components/admin/AdminProjectsPanel";
 import { AdminEducationPanel, AdminDocumentsPanel } from "@/components/admin/AdminEduDocsPanel";
+import { AdminCVBuilderPanel } from "@/components/admin/AdminCVBuilderPanel";
 import { AdminSettingsPanel } from "@/components/admin/AdminSettingsPanel";
 import {
   User, Code2, Briefcase, FolderOpen, GraduationCap,
@@ -28,6 +29,7 @@ const TABS = [
   { id: "education",  label: "Education",  icon: GraduationCap, panel: AdminEducationPanel,  desc: "Degrees & certs" },
   { id: "documents",  label: "Documents",  icon: FileText,      panel: AdminDocumentsPanel,  desc: "CV & files" },
   { id: "settings",   label: "Settings",   icon: Settings,      panel: AdminSettingsPanel,   desc: "Visibility & SEO" },
+  { id: "cv-builder", label: "CV Builder", icon: FileText, panel: AdminCVBuilderPanel, desc: "Edit & download your CV/cover letter" }
 ] as const;
 type TabId = typeof TABS[number]["id"];
 
