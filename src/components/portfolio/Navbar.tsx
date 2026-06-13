@@ -75,11 +75,11 @@ export function Navbar() {
             </Button>
           </a>
 
-          <Link href="/admin" className="hidden sm:block">
+          {/* <Link href="/admin" className="hidden sm:block">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <Settings size={14} /> Admin
             </Button>
-          </Link>
+          </Link> */}
 
           <button className="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-border text-muted-foreground"
             onClick={() => setOpen(!open)}>
