@@ -3,49 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Upload, Download, RotateCcw, FileText, Loader2 } from "lucide-react";
 
-/**
- * CV / Cover Letter Builder — Admin Panel
- * ----------------------------------------------------------------
- * Drop this file into: src/components/admin/AdminCVBuilderPanel.tsx
- *
- * Then register it as a tab in src/app/admin/page.tsx:
- *   import { AdminCVBuilderPanel } from "@/components/admin/AdminCVBuilderPanel";
- *   ...add to TABS array:
- *   { id: "cv-builder", label: "CV Builder", icon: FileText, panel: AdminCVBuilderPanel, desc: "Tailor & download your CV" }
- *
- * Install dependency:
- *   npm install pdfjs-dist
- *
- * HOW IT WORKS
- * ----------------------------------------------------------------
- * - Upload a PDF (your CV or cover letter) -> text is extracted with pdfjs-dist
- *   and dropped into an editable text box using a simple markup convention:
- *     # Name                -> big centered name
- *     ## Title line          -> subtitle under name
- *     > Contact / meta line  -> small centered contact line (with bottom rule)
- *     ### Section Heading    -> underlined section heading
- *     - bullet text          -> bullet point
- *     **bold text**          -> bold inline
- *     (blank line)           -> paragraph break
- *
- * - You (or an AI tool) edit the text directly -> the live preview on the
- *   right re-renders instantly using your CV's visual styling.
- * - "Download PDF" opens the print dialog scoped to just the preview,
- *   so "Save as PDF" produces a clean, formatted document. The browser's
- *   suggested filename is set dynamically from the document's own "# Name"
- *   line (falling back to a generic name), so it works for any user, not
- *   just one hardcoded person.
- * - Content is saved to localStorage automatically (per document type),
- *   and a "Reset" button restores the last-uploaded original.
- *
- * NOTE ON PERSISTENCE
- * ----------------------------------------------------------------
- * This uses localStorage for simplicity so it works immediately.
- * To persist across devices, wire `saveDoc`/`loadDoc` to your existing
- * Supabase `portfolios` table (e.g. store under portfolio.data.cvBuilder),
- * following the same pattern as persistPortfolio() / loadMyPortfolio().
- */
-
 type DocType = "cv" | "cover";
 
 const STORAGE_PREFIX = "cvbuilder_v1_";
@@ -60,7 +17,7 @@ Lead Software Engineer at Massive Pty Ltd, building enterprise-grade web and mob
 ### TECHNICAL SKILLS
 **Frontend:** React, Next.js, React Native, Angular, Tailwind CSS, HTML5, CSS3, TypeScript, JavaScript
 **Backend:** Node.js, Express.js, Python, Flask, Django REST Framework, Redis, MQTT
-**Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify), Docker, CI/CD, Linux
+**Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition), Docker, CI/CD, Linux
 **Databases:** PostgreSQL, MySQL, MongoDB, DynamoDB
 **APIs & Integrations:** Xero, ClickUp, Slack, Telegram, RESTful APIs, Real-Time Data Services
 **Testing & Tools:** Jest, Postman, Git
@@ -72,7 +29,6 @@ Lead Software Engineer at Massive Pty Ltd, building enterprise-grade web and mob
 - Integrated Xero, ClickUp, Slack, and Telegram APIs for automation; built automated PDF reporting engines with real-time data delivery.
 - Deployed containerized microservices with Docker and CI/CD pipelines, improving deployment reliability and reducing release friction across multiple services
 - Designed and maintained PostgreSQL and MongoDB data models supporting CRM, HR, and Inventory modules, optimizing queries for dashboards handling thousands of daily records.
-- Mentored junior developers on React Native and Django REST Framework conventions, conducting code reviews to raise team-wide code quality.
 
 **Full Stack Developer | Biztweak Pty Ltd, Johannesburg** — Feb 2023 – May 2023
 - Improved MERN stack applications, UI responsiveness, and backend performance; enhanced Tailwind CSS interfaces and supported deployment pipelines.
@@ -661,9 +617,6 @@ export function AdminCVBuilderPanel() {
           }
           html,
           body {
-            height: 297mm !important;
-            max-height: 297mm !important;
-            overflow: hidden !important;
             margin: 0 !important;
             padding: 0 !important;
           }
@@ -679,11 +632,11 @@ export function AdminCVBuilderPanel() {
             position: absolute;
             left: 0;
             top: 0;
-            box-shadow: none;
             margin: 0;
             width: 210mm;
-            max-height: 297mm;
-            overflow: hidden;
+            min-height: 0;
+            height: auto;
+            box-shadow: none !important;
           }
         }
       `}</style>
