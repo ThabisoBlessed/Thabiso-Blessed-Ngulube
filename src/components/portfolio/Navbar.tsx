@@ -1,6 +1,8 @@
+// FILE PATH: src/components/portfolio/Navbar.tsx
+
 "use client";
 import { useState, useEffect } from "react";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppSelector, selectResumeUrl } from "@/hooks/redux";
 import { useTheme } from "@/components/ThemeProvider";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,7 @@ const NAV = [
 
 export function Navbar() {
   const hero = useAppSelector((s) => s.portfolio.hero);
+  const resumeUrl = useAppSelector(selectResumeUrl);
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -69,11 +72,13 @@ export function Navbar() {
             {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
           </button>
 
-          <a href={hero.resumeUrl} target="_blank" className="hidden sm:inline-block">
-            <Button size="sm" className="bg-brand text-brand-fg hover:bg-brand/90 font-semibold shadow-sm shadow-brand/20">
-              Hire Me
-            </Button>
-          </a>
+          {resumeUrl && (
+            <a href={resumeUrl} target="_blank" className="hidden sm:inline-block">
+              <Button size="sm" className="bg-brand text-brand-fg hover:bg-brand/90 font-semibold shadow-sm shadow-brand/20">
+                Hire Me
+              </Button>
+            </a>
+          )}
 
           {/* <Link href="/admin" className="hidden sm:block">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -99,10 +104,12 @@ export function Navbar() {
               </a>
             ))}
             <div className="pt-2 border-t border-border">
-              <a href={hero.resumeUrl} target="_blank" onClick={() => setOpen(false)}
-                className="block px-3 py-2.5 text-sm font-medium text-brand hover:text-brand/80 rounded-lg hover:bg-secondary transition-all">
-                Hire Me
-              </a>
+              {resumeUrl && (
+                <a href={resumeUrl} target="_blank" onClick={() => setOpen(false)}
+                  className="block px-3 py-2.5 text-sm font-medium text-brand hover:text-brand/80 rounded-lg hover:bg-secondary transition-all">
+                  Hire Me
+                </a>
+              )}
               <Link href="/admin" onClick={() => setOpen(false)}
                 className="block px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-all">
                 Admin

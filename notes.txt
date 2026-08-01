@@ -1,0 +1,6 @@
+zip -r portfolio.zip . \
+  -x "node_modules/*" \
+  -x ".git/*" \
+  -x ".next/*" \
+  -x "*.DS_Store" \
+  -x "tsconfig.tsbuildinfo"

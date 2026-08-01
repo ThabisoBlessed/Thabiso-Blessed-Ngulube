@@ -1,3 +1,6 @@
+// FILE PATH: src/data/portfolio.ts
+// Save this file at that exact path in your project (overwrite the existing one).
+
 import type { PortfolioState } from "@/types";
 
 export const initialPortfolioData: PortfolioState = {
@@ -10,7 +13,7 @@ export const initialPortfolioData: PortfolioState = {
     email: "alex@example.com",
     phone: "+27 82 000 0000",
     avatar: "https://api.dicebear.com/7.x/notionists/svg?seed=alex&backgroundColor=b6e3f4",
-    resumeUrl: "/documents/cv.pdf",
+    resumeUrl: "",
     roles: ["Senior Full-Stack Engineer", "React Developer", "Node.js Expert", "Problem Solver"],
     yearsExp: 7,
     projectsCount: 20,
@@ -83,7 +86,7 @@ export const initialPortfolioData: PortfolioState = {
       id: "doc1",
       title: "Curriculum Vitae — 2024",
       description: "Full professional CV",
-      fileUrl: "/documents/cv.pdf",
+      fileUrl: "",
       fileType: "pdf",
       category: "CV",
       isVisible: true,

@@ -67,16 +67,24 @@ export default function AdminPage() {
 
   // Step 1: check auth
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
+    (async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session) {
+          if (error) await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+          router.replace("/auth/login");
+          return;
+        }
+        await Promise.all([
+          dispatch(fetchCurrentUser()),
+          dispatch(loadMyPortfolio()),
+        ]);
+      } catch {
         router.replace("/auth/login");
-        return;
+      } finally {
+        setAppReady(true);
       }
-      Promise.all([
-        dispatch(fetchCurrentUser()),
-        dispatch(loadMyPortfolio()),
-      ]).finally(() => setAppReady(true));
-    });
+    })();
   }, [dispatch, router]);
 
   // Auto-save debounce

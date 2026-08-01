@@ -1,6 +1,8 @@
+// FILE PATH: src/components/portfolio/HeroSection.tsx
+
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useAppSelector, selectHero, selectSiteSettings } from "@/hooks/redux";
+import { useAppSelector, selectHero, selectSiteSettings, selectResumeUrl } from "@/hooks/redux";
 import { Button } from "@/components/ui/button";
 import {
   MapPin,
@@ -137,7 +139,7 @@ function ProfileCard({
       <div className="divide-y divide-border">
         {hero.location && (
           <div className="flex items-center gap-3 px-5 py-3">
-            <MapPin size={13} className="text-brand flex-shrink-0" />
+            <MapPin size={13} className="text-brand shrink-0" />
             <span className="text-sm text-muted-foreground">
               {hero.location}
             </span>
@@ -145,7 +147,7 @@ function ProfileCard({
         )}
         {hero.email && (
           <div className="flex items-center gap-3 px-5 py-3">
-            <Mail size={13} className="text-brand flex-shrink-0" />
+            <Mail size={13} className="text-brand shrink-0" />
             <span className="text-sm text-muted-foreground truncate">
               {hero.email}
             </span>
@@ -153,7 +155,7 @@ function ProfileCard({
         )}
         {openToWork && (
           <div className="flex items-center gap-3 px-5 py-3">
-            <CheckCircle size={13} className="text-green-500 flex-shrink-0" />
+            <CheckCircle size={13} className="text-green-500 shrink-0" />
             <span className="text-sm text-green-600 dark:text-green-400 font-medium">
               {noticeLabel}
             </span>
@@ -178,6 +180,7 @@ function ProfileCard({
 export function HeroSection() {
   const hero = useAppSelector(selectHero);
   const settings = useAppSelector(selectSiteSettings);
+  const resumeUrl = useAppSelector(selectResumeUrl);
   if (!hero.isVisible) return null;
   
   const openToWork = settings?.openToWork ?? true;
@@ -270,7 +273,7 @@ export function HeroSection() {
               <img
                 src={hero.avatar}
                 alt={hero.name}
-                className="w-16 h-16 rounded-2xl border-2 border-brand/20 object-cover shadow-md flex-shrink-0"
+                className="w-16 h-16 rounded-2xl border-2 border-brand/20 object-cover shadow-md shrink-0"
               />
               {openToWork && (
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand/25 bg-brand/5 text-xs font-semibold text-brand">
@@ -293,7 +296,7 @@ export function HeroSection() {
                   NOT CURRENTLY LOOKING
                 </div>
               )}
-              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <div className="h-px flex-1 bg-linear-to-r from-border to-transparent" />
             </div>
 
             {/* Name */}
@@ -324,7 +327,7 @@ export function HeroSection() {
               <div className="mt-4 flex items-center gap-2">
                 <span className="text-muted-foreground text-base">—</span>
 
-                <span className="text-base md:text-xl font-medium text-foreground min-w-[70px] h-5">
+                <span className="text-base md:text-xl font-medium text-foreground min-w-17.5 h-5">
                   {typed}
                   <span className="inline-block w-0.5 h-4 bg-brand ml-0.5 align-middle animate-pulse" />
                 </span>
@@ -341,7 +344,7 @@ export function HeroSection() {
             <div className="flex flex-wrap gap-4 text-sm">
               {hero.location && (
                 <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <MapPin size={13} className="text-brand flex-shrink-0" />{" "}
+                  <MapPin size={13} className="text-brand shrink-0" />{" "}
                   {hero.location}
                 </span>
               )}
@@ -350,7 +353,7 @@ export function HeroSection() {
                   href={`mailto:${hero.email}`}
                   className="flex items-center gap-1.5 text-muted-foreground hover:text-brand transition-colors"
                 >
-                  <Mail size={13} className="text-brand flex-shrink-0" />{" "}
+                  <Mail size={13} className="text-brand shrink-0" />{" "}
                   {hero.email}
                 </a>
               )}
@@ -370,11 +373,13 @@ export function HeroSection() {
                   View My Work <ArrowRight size={16} />
                 </Button>
               </a>
-              <a href={hero.resumeUrl} target="_blank" rel="noreferrer">
-                <Button variant="outline" size="lg" className="font-medium">
-                  <Download size={15} /> Download CV
-                </Button>
-              </a>
+              {resumeUrl && (
+                <a href={resumeUrl} target="_blank" rel="noreferrer">
+                  <Button variant="outline" size="lg" className="font-medium">
+                    <Download size={15} /> Download CV
+                  </Button>
+                </a>
+              )}
             </div>
 
             {/* Social icons */}
@@ -444,7 +449,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-24 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 }

@@ -132,8 +132,144 @@ function inline(s: string) {
   return out;
 }
 
+const SIDEBAR_KEYWORDS = [
+  "SKILL",
+  "EDUCATION",
+  "CERTIF",
+  "LANGUAGE",
+  "TRAINING",
+  "COURSE",
+  "INTEREST",
+  "AWARD",
+  "ACHIEVEMENT",
+];
+
+function isSidebarSection(title: string): boolean {
+  const t = title.toUpperCase();
+  return SIDEBAR_KEYWORDS.some((k) => t.includes(k));
+}
+
+// Render a block of body lines (paragraphs / bullets / highlight boxes) with
+// no header or section-title handling — used per-section inside the
+// two-column CV layout below.
+function renderBodyLines(lines: string[]): string {
+  let html = "";
+  let inList = false;
+  let para: string[] = [];
+  let inHighlight = false;
+  const flushPara = () => {
+    if (para.length) {
+      html += `<p>${para.map(inline).join("<br/>")}</p>`;
+      para = [];
+    }
+  };
+  const closeList = () => {
+    if (inList) {
+      html += "</ul>";
+      inList = false;
+    }
+  };
+  const closeHighlight = () => {
+    if (inHighlight) {
+      html += "</div>";
+      inHighlight = false;
+    }
+  };
+  for (const lineRaw of lines) {
+    const line = lineRaw.trimEnd();
+    if (line.trim() === "") {
+      closeList();
+      flushPara();
+      closeHighlight();
+      continue;
+    }
+    if (line.startsWith("+++ ")) {
+      closeList();
+      flushPara();
+      closeHighlight();
+      html += `<div class="highlight-box"><p>${inline(line.slice(4))}</p>`;
+      inHighlight = true;
+    } else if (line.startsWith("- ")) {
+      flushPara();
+      if (!inList) {
+        html += "<ul>";
+        inList = true;
+      }
+      html += `<li>${inline(line.slice(2))}</li>`;
+    } else {
+      closeList();
+      closeHighlight();
+      para.push(line);
+    }
+  }
+  closeList();
+  flushPara();
+  closeHighlight();
+  return html;
+}
+
+// Two-column CV layout: a name/title/contact banner up top, then a wide
+// "main" column (summary + experience) beside a narrower "side" column
+// (skills / education / certifications / languages) — a classic modern
+// resume format.
+function renderCV(raw: string): string {
+  const lines = raw.split("\n");
+  let i = 0;
+  let nameLine = "";
+  let titleLine = "";
+  const metaLines: string[] = [];
+
+  while (i < lines.length) {
+    const line = lines[i].trimEnd();
+    if (line.startsWith("### ")) break;
+    if (line.startsWith("# ")) nameLine = line.slice(2);
+    else if (line.startsWith("## ")) titleLine = line.slice(3);
+    else if (line.startsWith("> ")) metaLines.push(line.slice(2));
+    i++;
+  }
+
+  const headerHtml = `<div class="cv2-header">
+    <h1 class="cv2-name">${inline(nameLine)}</h1>
+    ${titleLine ? `<p class="cv2-title">${inline(titleLine)}</p>` : ""}
+    ${metaLines.length ? `<p class="cv2-meta">${metaLines.map(inline).join(" &nbsp;|&nbsp; ")}</p>` : ""}
+  </div>`;
+
+  type Section = { title: string; body: string };
+  const sections: Section[] = [];
+  let curTitle = "";
+  let curLines: string[] = [];
+  const pushSection = () => {
+    if (curTitle) sections.push({ title: curTitle, body: renderBodyLines(curLines) });
+    curLines = [];
+  };
+  for (; i < lines.length; i++) {
+    const line = lines[i].trimEnd();
+    if (line.startsWith("### ")) {
+      pushSection();
+      curTitle = line.slice(4);
+    } else {
+      curLines.push(line);
+    }
+  }
+  pushSection();
+
+  const mainSections = sections.filter((s) => !isSidebarSection(s.title));
+  const sideSections = sections.filter((s) => isSidebarSection(s.title));
+
+  const renderCol = (list: Section[]) =>
+    list
+      .map(
+        (s) =>
+          `<div class="cv2-section"><div class="cv2-sec-title">${inline(s.title)}</div>${s.body}</div>`,
+      )
+      .join("");
+
+  return `${headerHtml}<div class="cv2-body"><div class="cv2-main">${renderCol(mainSections)}</div><div class="cv2-side">${renderCol(sideSections)}</div></div>`;
+}
+
 // Convert the simple markup language into styled HTML for the preview/print
 function renderDoc(raw: string, type: DocType): string {
+  if (type === "cv") return renderCV(raw);
   const lines = raw.split("\n");
   let html = "";
   let inList = false;
@@ -540,6 +676,82 @@ export function AdminCVBuilderPanel() {
           border-bottom: 1px solid #1f3a63;
           padding-bottom: 8px;
           margin-bottom: 10px;
+        }
+        .cv-page .cv2-header {
+          border-bottom: 2px solid #16284a;
+          padding-bottom: 10px;
+          margin-bottom: 14px;
+        }
+        .cv-page .cv2-name {
+          font-size: 19pt;
+          font-weight: bold;
+          margin: 0;
+          color: #16284a;
+          letter-spacing: 0.02em;
+        }
+        .cv-page .cv2-title {
+          font-size: 10.5pt;
+          font-weight: 600;
+          color: #0c447c;
+          margin: 3px 0 6px;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+        }
+        .cv-page .cv2-meta {
+          font-size: 8.5pt;
+          color: #444;
+          margin: 0;
+        }
+        .cv-page .cv2-meta a {
+          color: #444;
+          text-decoration: underline;
+        }
+        .cv-page .cv2-body {
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+        }
+        .cv-page .cv2-main {
+          flex: 1.7;
+          min-width: 0;
+        }
+        .cv-page .cv2-side {
+          flex: 1;
+          min-width: 0;
+          border-left: 1px solid #d8dee8;
+          padding-left: 16px;
+        }
+        .cv-page .cv2-section {
+          margin-bottom: 12px;
+        }
+        .cv-page .cv2-sec-title {
+          font-size: 9.5pt;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #16284a;
+          border-bottom: 1.5px solid #16284a;
+          padding-bottom: 3px;
+          margin-bottom: 6px;
+        }
+        .cv-page .cv2-side .cv2-sec-title {
+          font-size: 8.5pt;
+        }
+        .cv-page .cv2-body p {
+          margin: 0 0 4px;
+        }
+        .cv-page .cv2-body ul {
+          list-style: disc !important;
+          margin: 2px 0 6px 16px !important;
+          padding: 0 0 0 1em !important;
+        }
+        .cv-page .cv2-body li {
+          display: list-item !important;
+          margin-bottom: 3px;
+          font-size: 9pt;
+        }
+        .cv-page .cv2-side li {
+          font-size: 8.5pt;
         }
         .cv-page .doc-name {
           font-size: 16pt;

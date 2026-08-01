@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { ReduxProvider } from "@/store/provider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthTokenGuard } from "@/components/AuthTokenGuard";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "folio.",
-  description: "Your portfolio, your way",
+  title: "Thabiso Blessed Ngulube — Full Stack Software Engineer",
+  description:
+    "Portfolio of Thabiso Blessed Ngulube, a Lead Software Engineer building real-time IoT platforms and enterprise web/mobile systems.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body suppressHydrationWarning>
         <ThemeProvider>
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <AuthTokenGuard />
+            {children}
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>
