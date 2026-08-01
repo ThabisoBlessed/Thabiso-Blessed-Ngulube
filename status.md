@@ -1,5 +1,3 @@
-<!-- FILE PATH: status.md (project root) -->
-
 # Project Status — Thabiso's Portfolio
 
 Last updated: **2026-08-01**
@@ -44,28 +42,6 @@ Repo: originally a multi-tenant portfolio SaaS ("folio."), being converted into 
 - `src/components/admin/AdminCVBuilderPanel.tsx` — CV tab now renders a two-column layout (name/title/contact banner → wide main column for Summary/Experience beside a narrow sidebar for Skills/Education/Certifications/Languages), auto-sorted by section heading keywords. Cover Letter tab logic untouched.
 
 ---
-
-## Done — 2026-08-01 (part 2)
-
-### 4. Fixed dead "Hire Me" button + `/documents/cv.pdf` 404
-- Root cause: `hero.resumeUrl` and the CV entry in `documents[]` both point to `/documents/cv.pdf` (a static, public-folder path) — but no file existed at `public/documents/cv.pdf` in the project. This value comes from `src/data/portfolio.ts`'s `initialPortfolioData` (the "Alex Mokoena" dummy fallback data), so it was 404ing whether or not Thabiso's real Supabase row overrides other fields.
-- Generated a real one-page CV PDF (`public/documents/cv.pdf`) matching the two-column layout built into the CV Builder, using Thabiso's real CV content (same source as `PLACEHOLDER_CV` in `AdminCVBuilderPanel.tsx`). Built with WeasyPrint (HTML/CSS → PDF), not hand-coded in reportlab, so it visually matches the CV Builder's design.
-- This fixes the **local dev / fallback default** case. It does NOT touch whatever `resumeUrl` value is actually stored in Thabiso's Supabase `portfolios` row — if that row has a different (also-broken) URL, this file drop won't help until that value is corrected too. Same for the `documents` table entry if Thabiso has since added real documents via `/admin` → Documents tab.
-- ⚠️ Longer-term, static `/documents/cv.pdf` is a bit fragile (anyone can overwrite it by redeploying without the file, like just happened). Worth considering: have the CV Builder's "Download PDF" output get uploaded to Supabase Storage and have `resumeUrl` point there instead, so it's not dependent on a file surviving in `public/`.
-
-## Done — 2026-08-01 (part 3)
-
-### 5. Fixed "Hire Me" / Download CV — was reading the wrong field entirely
-- **Real root cause found:** `AdminHeroPanel.tsx` (the "About Me" tab in `/admin`) has no field to set `hero.resumeUrl` at all — it never did. Meanwhile, uploading a CV via `/admin` → Documents tab correctly uploads to Supabase Storage and saves a real URL, but into a totally different place: `documents[].fileUrl` where `category === "CV"`. The Hire Me / Download CV buttons were hardcoded to read `hero.resumeUrl` — a field with no UI to ever set it — so no matter what CV you uploaded through Documents, the buttons never saw it.
-- **Fix:** added `selectResumeUrl` in `src/hooks/redux.ts` — it looks for the visible Documents entry with `category === "CV"` and uses *that* `fileUrl` first (i.e. whatever you actually uploaded), falling back to `hero.resumeUrl` only if no such document exists.
-- `Navbar.tsx` (desktop + mobile Hire Me) and `HeroSection.tsx` (Download CV) now both use `selectResumeUrl` instead of `hero.resumeUrl` directly.
-- Both buttons now only render at all if a real URL resolves — no more dead-link buttons when nothing's been uploaded yet.
-- Also cleaned up `src/data/portfolio.ts`: the dummy fallback data had a fake `"/documents/cv.pdf"` in both `hero.resumeUrl` and the sample CV document — changed both to `""` so a fresh/unconfigured portfolio just hides the buttons instead of shipping a link that 404s.
-- `OtherSections.tsx` Documents grid: download icon now only renders per-document if that document actually has a `fileUrl` (guards against any doc with a stalled/failed upload, not just CV).
-
-**Net effect: whatever CV is uploaded in `/admin` → Documents → category "CV" is now what actually shows up everywhere.** No separate field to remember to fill in.
-
-(Earlier in this same session I'd generated a static `public/documents/cv.pdf` as a stopgap before finding this root cause — that file still works fine as a manual fallback if you ever want one, but it's no longer required; the real fix is uploading through Documents in `/admin` like normal.)
 
 ## Not Done Yet (known gaps, ranked by importance)
 
