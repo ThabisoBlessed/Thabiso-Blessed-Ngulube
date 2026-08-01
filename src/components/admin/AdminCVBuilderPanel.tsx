@@ -14,18 +14,23 @@ const PLACEHOLDER_CV = `# THABISO BLESSED NGULUBE
 ### PROFESSIONAL SUMMARY
 Lead Software Engineer at Massive Pty Ltd, building enterprise-grade web and mobile applications with a strong focus on real-time IoT systems, data pipelines, and cloud-native architectures. Proven ability to design and implement real-time data pipelines, integrate third-party APIs, and deploy scalable cloud solutions using AWS, Docker, and CI/CD pipelines.
 
+### KEY PROJECTS
+**IoT Telemetry Platform** — Designed a real-time PLC data pipeline using MQTT and Redis, processing high-volume sensor streams from mining equipment into live dashboards used by field operations teams.
+**Automated Reporting Engine** — Built a PDF generation and Telegram-bot delivery system that replaced manual weekly reporting, saving hours of admin work per week.
+**Cross-Platform Field App** — Shipped a React Native inspections app syncing with the CRM/Inventory backend, used daily by on-site technicians across multiple sites.
+
 ### TECHNICAL SKILLS
-**Frontend:** React, Next.js, React Native, Angular, Tailwind CSS, HTML5, CSS3, TypeScript, JavaScript
-**Backend:** Node.js, Express.js, Python, Flask, Django REST Framework, Redis, MQTT
-**Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition), Docker, CI/CD, Linux
-**Databases:** PostgreSQL, MySQL, MongoDB, DynamoDB
-**APIs & Integrations:** Xero, ClickUp, Slack, Telegram, RESTful APIs, Real-Time Data Services
-**Testing & Tools:** Jest, Postman, Git
+- **Frontend:** React, Next.js, React Native, Angular, Tailwind CSS, HTML5, CSS3, TypeScript, JavaScript
+- **Backend:** Node.js, Express.js, Python, FastApi, Flask, Redis, MQTT
+- **Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition), Docker, CI/CD, Linux
+- **Databases:** PostgreSQL, MySQL, MongoDB, DynamoDB
+- **APIs & Integrations:** Xero, ClickUp, Slack, Telegram, RESTful APIs, Real-Time Data Services
+- **Testing & Tools:** Jest, Postman, Git
 
 ### PROFESSIONAL EXPERIENCE
 **Lead Software Engineer | Massive Group Pty Ltd, Centurion** — June 2023 – Present
 - Led development and owned architecture of enterprise platforms across CRM, HR, Inventory, Inspections, LMS, and IoT workflows, collaborating with cross-functional teams in the mining technology sector.
-- Built React Native mobile apps and Next.js dashboards enabling real-time KPI reporting and operational visibility for field teams; designed IoT data pipelines using Redis, MQTT, and Django for PLC telemetry processing.
+- Built React Native mobile apps and Next.js dashboards enabling real-time KPI reporting and operational visibility for field teams; designed IoT data pipelines using Redis, MQTT, and FastApi for PLC telemetry processing.
 - Integrated Xero, ClickUp, Slack, and Telegram APIs for automation; built automated PDF reporting engines with real-time data delivery.
 - Deployed containerized microservices with Docker and CI/CD pipelines, improving deployment reliability and reducing release friction across multiple services
 - Designed and maintained PostgreSQL and MongoDB data models supporting CRM, HR, and Inventory modules, optimizing queries for dashboards handling thousands of daily records.
@@ -49,12 +54,20 @@ B.Sc. in Computer Engineering | European University of Lefke 2018 – 2022
 - Agile Scrum Master, Skill Up
 - Registered Candidate Engineering Technologist, ECSA
 
+### INTERESTS
+- Open-source contributions
+- IoT & embedded systems
+- Cloud architecture design
+- Mentoring junior developers
+
 ### LANGUAGES
-English (Fluent) | Zulu (Native) | Turkish (Conversational)`;
+- English (Fluent)
+- Zulu (Native)
+- Turkish (Conversational)`;
 
 const PLACEHOLDER_COVER = `# THABISO BLESSED NGULUBE
 ## Full Stack Software Engineer
-## React • Next.js • Node.js • AWS • Docker • Django
+## React • Next.js • Node.js • AWS • Docker • FastApi
 >> 📍 Centurion, Gauteng
 >> 📧 blessedngust13@gmail.com
 >> 📞 +27 74 417 7166
@@ -64,7 +77,7 @@ Re: Application for {{Software Engineering role}}
 
 Dear Hiring Manager's Name,
 
-I'm a Full Stack Engineer building real-time, enterprise-grade systems across IoT, cloud infrastructure, and modern web applications. With 3+ years of hands-on experience delivering production systems using React, Node.js, Django, and AWS, I focus on building scalable solutions that directly impact business operations.
+I'm a Full Stack Engineer building real-time, enterprise-grade systems across IoT, cloud infrastructure, and modern web applications. With 3+ years of hands-on experience delivering production systems using React, Node.js, FastApi, and AWS, I focus on building scalable solutions that directly impact business operations.
 
 In my current role at Massive Group — a mining technology company — I have built and maintained enterprise applications covering IoT data pipelines, CRM, HR, inventory, and compliance workflows. I architected a real-time data processing system using Redis and MQTT that handles high-volume sensor streams from industrial equipment, and developed an automated PDF reporting engine integrated with the Telegram Bot API that eliminated hours of manual reporting per week.
 
@@ -90,8 +103,18 @@ Kind Regards,
 {{Full Stack Software Engineer}}
 blessedngust13@gmail.com | +27 74 417 7166`;
 
+const CONTENT_VERSION = "v4";
+
 function loadDoc(type: DocType): string {
   if (typeof window === "undefined") return "";
+  const storedVersion = localStorage.getItem(STORAGE_PREFIX + "version");
+  if (storedVersion !== CONTENT_VERSION) {
+    localStorage.removeItem(STORAGE_PREFIX + "cv");
+    localStorage.removeItem(STORAGE_PREFIX + "cover");
+    localStorage.removeItem(STORAGE_PREFIX + "cv_original");
+    localStorage.removeItem(STORAGE_PREFIX + "cover_original");
+    localStorage.setItem(STORAGE_PREFIX + "version", CONTENT_VERSION);
+  }
   return (
     localStorage.getItem(STORAGE_PREFIX + type) ??
     (type === "cv" ? PLACEHOLDER_CV : PLACEHOLDER_COVER)
@@ -393,6 +416,72 @@ function renderDoc(raw: string, type: DocType): string {
   return html;
 }
 
+// A4 content height in px at 96dpi minus the 8mm top+bottom padding
+// (297mm ≈ 1122.5px, 8mm*2 ≈ 60.5px of padding removed from the box we measure)
+const PAGE_CONTENT_HEIGHT_PX = 1122.5 - 60.5;
+
+// Plain-string duplicate of the core .cv-page rules below, used to build a
+// fully standalone print document (see handleDownload). Keep this in sync
+// with the <style jsx global> block near the bottom of this file if you
+// change the CV's visual styling.
+const PRINT_CSS = `
+  html, body { margin: 0; padding: 0; background: #fff; }
+  @page { margin: 0; size: A4; }
+  .cv-page {
+    background: #fff;
+    color: #000;
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 8mm 10mm;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.28;
+    position: relative;
+  }
+  .cv-page-inner { transform-origin: top left; }
+  .cv-page .cover-header { display: flex; border-radius: 8px; overflow: hidden; margin: 0 0 18px 0; }
+  .cv-page .cover-header-left { background: #16284a; color: #fff; flex: 1.7; padding: 14px 18px; }
+  .cv-page .cover-header-right { background: #1f3a63; color: #fff; flex: 1; padding: 14px 16px; border-left: 1px solid rgba(255,255,255,0.18); }
+  .cv-page .cover-header .doc-name { color: #fff; text-align: left; font-size: 15pt; }
+  .cv-page .cover-header .doc-title { color: #dbe6f4; text-align: left; margin: 2px 0 4px; }
+  .cv-page .cover-header .doc-subtitle { color: #9fb7d8; text-align: left; font-size: 8.5pt; font-style: italic; margin: 0 0 4px; }
+  .cv-page .cover-header .doc-meta { color: #9fb7d8; text-align: left; font-style: italic; font-size: 8.5pt; margin: 0; border-bottom: none; padding-bottom: 0; }
+  .cv-page .cover-header-right .contact-line { font-size: 8.5pt; margin: 0 0 4px; color: #fff; }
+  .cv-page .cover-header-right .contact-line a { color: #fff; text-decoration: none; }
+  .cv-page .cover-header + p { border-bottom: 1px solid #1f3a63; padding-bottom: 8px; margin-bottom: 10px; }
+  .cv-page .cv2-header { border-bottom: 2px solid #16284a; padding-bottom: 10px; margin-bottom: 14px; }
+  .cv-page .cv2-name { font-size: 19pt; font-weight: bold; margin: 0; color: #16284a; letter-spacing: 0.02em; }
+  .cv-page .cv2-title { font-size: 10.5pt; font-weight: 600; color: #0c447c; margin: 3px 0 6px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .cv-page .cv2-meta { font-size: 8.5pt; color: #444; margin: 0; }
+  .cv-page .cv2-meta a { color: #444; text-decoration: underline; }
+  .cv-page .cv2-body { display: flex; gap: 20px; align-items: stretch; }
+  .cv-page .cv2-main { flex: 1.7; min-width: 0; }
+  .cv-page .cv2-side { flex: 1; min-width: 0; border-left: 1px solid #d8dee8; padding-left: 16px; }
+  .cv-page .cv2-section { margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
+  .cv-page .cv2-sec-title { font-size: 9.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #16284a; border-bottom: 1.5px solid #16284a; padding-bottom: 3px; margin-bottom: 6px; }
+  .cv-page .cv2-side .cv2-sec-title { font-size: 8.5pt; }
+  .cv-page .cv2-body p { margin: 0 0 4px; }
+  .cv-page .cv2-body ul { list-style: disc; margin: 2px 0 6px 16px; padding: 0 0 0 1em; }
+  .cv-page .cv2-body li { display: list-item; margin-bottom: 3px; font-size: 9pt; }
+  .cv-page .cv2-side li { font-size: 8.5pt; }
+  .cv-page .doc-name { font-size: 16pt; font-weight: bold; text-align: center; margin: 0; }
+  .cv-page .doc-title { text-align: center; font-size: 10.5pt; margin: 2px 0 6px; }
+  .cv-page .doc-meta { text-align: center; font-size: 9pt; color: #222; margin: 0 0 6px; }
+  .cv-page .doc-meta:last-of-type { border-bottom: 1.5px solid #000; padding-bottom: 10px; margin-bottom: 14px; }
+  .cv-page .sec-title { font-size: 10.5pt; font-weight: bold; border-bottom: 1px solid #000; margin: 10px 0 4px; padding-bottom: 2px; letter-spacing: 0.04em; }
+  .cv-page p { margin: 0 0 4px; }
+  .cv-page ul { list-style: disc; margin: 2px 0 8px 18px; padding: 0 0 0 1em; }
+  .cv-page li { display: list-item; margin-bottom: 3px; }
+  .cv-page a { color: #0c447c; text-decoration: none; }
+  .cv-page .doc-meta a { color: #222; text-decoration: underline; }
+  .cv-page .accent { color: #0c447c; font-weight: bold; }
+  .cv-page .highlight-box { background: #eaf2fb; border-left: 4px solid #0c447c; border-radius: 4px; padding: 8px 12px 6px; margin: 8px 0; }
+  .cv-page .highlight-box p { font-weight: bold; margin-bottom: 4px; }
+  .cv-page .highlight-box ul { margin: 0 0 0 1.2em; }
+`;
+
 export function AdminCVBuilderPanel() {
   const [active, setActive] = useState<DocType>("cv");
   const [content, setContent] = useState<Record<DocType, string>>({
@@ -402,10 +491,33 @@ export function AdminCVBuilderPanel() {
   const [parsing, setParsing] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     setContent({ cv: loadDoc("cv"), cover: loadDoc("cover") });
   }, []);
+
+  // Auto-shrink-to-fit: after every render of the doc content, measure the
+  // natural (unscaled) height of the inner content. If it's taller than one
+  // A4 page, scale it down just enough to fit — forcing everything onto a
+  // single page instead of letting it overflow onto a second one.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+
+    // Reset to measure natural height first
+    el.style.transform = "scale(1)";
+    // Force reflow before measuring
+    const naturalHeight = el.scrollHeight;
+
+    if (naturalHeight > PAGE_CONTENT_HEIGHT_PX) {
+      const nextScale = PAGE_CONTENT_HEIGHT_PX / naturalHeight;
+      setScale(Math.max(nextScale, 0.55)); // floor so text never gets unreadably tiny
+    } else {
+      setScale(1);
+    }
+  }, [content, active]);
 
   const updateContent = (type: DocType, value: string) => {
     setContent((prev) => ({ ...prev, [type]: value }));
@@ -485,25 +597,62 @@ export function AdminCVBuilderPanel() {
   };
 
   const handleDownload = () => {
-    // Dynamic PDF title/filename: most browsers use document.title as the
-    // suggested filename in the "Save as PDF" dialog. Set it from whoever's
-    // name is actually in the "# Name" line of the doc being printed, then
-    // restore the page's real title afterwards.
+    // Print via a hidden, fully isolated iframe instead of window.print()
+    // on the whole app page. This is what actually fixes the "looks like
+    // 1 page on screen but prints as 2" bug: window.print() hands control
+    // to the browser's print engine along with the ENTIRE app's CSS/DOM,
+    // and the browser's own print margins/scaling can override our layout
+    // in ways we don't control. An iframe containing ONLY the CV markup
+    // and its own minimal stylesheet gives the print engine nothing else
+    // to react to, so our fixed 210mm x 297mm box prints exactly as shown.
     const personName = extractDocName(content[active]);
     const docLabel = active === "cv" ? "CV" : "Cover Letter";
-    const printTitle = `${personName} - ${docLabel}`;
+    const bodyHtml = renderDoc(content[active], active);
+    const widthStyle = scale < 1 ? `${100 / scale}%` : "100%";
 
-    const prevTitle = document.title;
-    document.title = printTitle;
+    const doc = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>${personName} - ${docLabel}</title>
+<style>${PRINT_CSS}</style>
+</head>
+<body>
+<div class="cv-page"><div class="cv-page-inner" style="transform: scale(${scale}); width: ${widthStyle};">${bodyHtml}</div></div>
+</body>
+</html>`;
 
-    const restore = () => {
-      document.title = prevTitle;
-      window.removeEventListener("afterprint", restore);
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentWindow?.document;
+    if (!iframeDoc) {
+      document.body.removeChild(iframe);
+      setError("Couldn't open the print window. Please try again.");
+      return;
+    }
+    iframeDoc.open();
+    iframeDoc.write(doc);
+    iframeDoc.close();
+
+    const cleanup = () => {
+      if (iframe.parentNode) document.body.removeChild(iframe);
     };
-    window.addEventListener("afterprint", restore);
 
-    window.print();
-    setTimeout(restore, 2000);
+    iframe.onload = () => {
+      // small delay so the iframe has fully laid out before printing
+      setTimeout(() => {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+        setTimeout(cleanup, 1000);
+      }, 150);
+    };
   };
 
   return (
@@ -585,13 +734,19 @@ export function AdminCVBuilderPanel() {
         />
 
         <div className="overflow-y-auto h-[70vh] rounded-xl border border-border bg-secondary/30 flex justify-center p-4">
-          <div
-            id="cv-print-area"
-            className="cv-page"
-            dangerouslySetInnerHTML={{
-              __html: renderDoc(content[active], active),
-            }}
-          />
+          <div id="cv-print-area" className="cv-page">
+            <div
+              ref={innerRef}
+              className="cv-page-inner"
+              style={{
+                transform: `scale(${scale})`,
+                width: scale < 1 ? `${100 / scale}%` : "100%",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: renderDoc(content[active], active),
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -600,9 +755,10 @@ export function AdminCVBuilderPanel() {
           background: #fff;
           color: #000;
           width: 210mm;
-          min-height: 297mm;
+          height: 297mm;
+          overflow: hidden;
           box-sizing: border-box;
-          padding: 14mm 16mm;
+          padding: 8mm 10mm;
           font-family: Arial, Helvetica, sans-serif;
           font-size: 9.5pt;
           line-height: 1.28;
@@ -617,6 +773,9 @@ export function AdminCVBuilderPanel() {
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
           color-adjust: exact;
+        }
+        .cv-page-inner {
+          transform-origin: top left;
         }
         .cv-page .cover-header {
           display: flex;
@@ -709,7 +868,7 @@ export function AdminCVBuilderPanel() {
         .cv-page .cv2-body {
           display: flex;
           gap: 20px;
-          align-items: flex-start;
+          align-items: stretch;
         }
         .cv-page .cv2-main {
           flex: 1.7;
@@ -723,6 +882,8 @@ export function AdminCVBuilderPanel() {
         }
         .cv-page .cv2-section {
           margin-bottom: 12px;
+          page-break-inside: avoid;
+          break-inside: avoid;
         }
         .cv-page .cv2-sec-title {
           font-size: 9.5pt;
@@ -846,8 +1007,8 @@ export function AdminCVBuilderPanel() {
             top: 0;
             margin: 0;
             width: 210mm;
-            min-height: 0;
-            height: auto;
+            height: 297mm;
+            overflow: hidden;
             box-shadow: none !important;
           }
         }
