@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Upload, Download, RotateCcw, FileText, Loader2 } from "lucide-react";
+// Add to imports
+import { Copy, Check } from "lucide-react";
 
 type DocType = "cv" | "cover";
 
@@ -22,7 +24,7 @@ Lead Software Engineer at Massive Pty Ltd, building enterprise-grade web and mob
 ### TECHNICAL SKILLS
 - **Frontend:** React, Next.js, React Native, Angular, Tailwind CSS, HTML5, CSS3, TypeScript, JavaScript
 - **Backend:** Node.js, Express.js, Python, FastApi, Flask, Redis, MQTT
-- **Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition), Docker, CI/CD, Linux
+- **Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition),Digital Ocean (Managed Databases) Docker, CI/CD, Linux
 - **Databases:** PostgreSQL, MySQL, MongoDB, DynamoDB
 - **APIs & Integrations:** Xero, ClickUp, Slack, Telegram, RESTful APIs, Real-Time Data Services
 - **Testing & Tools:** Jest, Postman, Git
@@ -262,7 +264,8 @@ function renderCV(raw: string): string {
   let curTitle = "";
   let curLines: string[] = [];
   const pushSection = () => {
-    if (curTitle) sections.push({ title: curTitle, body: renderBodyLines(curLines) });
+    if (curTitle)
+      sections.push({ title: curTitle, body: renderBodyLines(curLines) });
     curLines = [];
   };
   for (; i < lines.length; i++) {
@@ -493,6 +496,16 @@ export function AdminCVBuilderPanel() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  // Add to component state
+  const [copied, setCopied] = useState(false);
+  const promptText =
+    "Update this CV markdown and return it as markdown — same format, no PDF/DOCX file, just the raw markdown text in the chat that I can copy and paste into my CV generator. Don't create any files or use file tools unless I explicitly ask for a PDF or Word doc.";
+
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(promptText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   useEffect(() => {
     setContent({ cv: loadDoc("cv"), cover: loadDoc("cover") });
@@ -657,17 +670,33 @@ export function AdminCVBuilderPanel() {
 
   return (
     <div>
+      <div className="relative mb-4 rounded-xl border border-border bg-secondary/40 p-3 pr-20">
+        <p className="text-xs font-mono leading-relaxed text-muted-foreground whitespace-pre-wrap">
+          {promptText}
+        </p>
+        <button
+          onClick={handleCopyPrompt}
+          className="absolute top-2 right-2 cursor-pointer flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs font-medium hover:bg-secondary transition-colors"
+        >
+          {copied ? (
+            <Check size={12} className="text-green-600" />
+          ) : (
+            <Copy size={12} />
+          )}
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex rounded-lg border border-border overflow-hidden">
           <button
             onClick={() => setActive("cv")}
-            className={`px-4 py-2 text-sm font-medium ${active === "cv" ? "bg-brand text-white" : "bg-card text-muted-foreground hover:bg-secondary"}`}
+            className={`px-4 py-2 text-sm cursor-pointer font-medium ${active === "cv" ? "bg-brand text-white" : "bg-card text-muted-foreground hover:bg-secondary"}`}
           >
             CV
           </button>
           <button
             onClick={() => setActive("cover")}
-            className={`px-4 py-2 text-sm font-medium border-l border-border ${active === "cover" ? "bg-brand text-white" : "bg-card text-muted-foreground hover:bg-secondary"}`}
+            className={`px-4 py-2 text-sm cursor-pointer font-medium border-l border-border ${active === "cover" ? "bg-brand text-white" : "bg-card text-muted-foreground hover:bg-secondary"}`}
           >
             Cover Letter
           </button>
@@ -676,7 +705,7 @@ export function AdminCVBuilderPanel() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={parsing}
-          className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-border hover:bg-secondary transition-colors"
+          className="flex items-center gap-1.5  cursor-pointer text-sm font-medium px-3 py-2 rounded-lg border border-border hover:bg-secondary transition-colors"
         >
           {parsing ? (
             <Loader2 size={14} className="animate-spin" />
@@ -695,7 +724,7 @@ export function AdminCVBuilderPanel() {
 
         <button
           onClick={handleDownload}
-          className="flex items-center gap-1.5 text-sm font-semibold px-3 py-2 rounded-lg bg-brand text-white hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5  cursor-pointer text-sm font-semibold px-3 py-2 rounded-lg bg-brand text-white hover:opacity-90 transition-opacity"
         >
           <Download size={14} />
           Download PDF
@@ -703,7 +732,7 @@ export function AdminCVBuilderPanel() {
 
         <button
           onClick={handleReset}
-          className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-border hover:bg-secondary transition-colors"
+          className="flex items-center gap-1.5  cursor-pointer text-sm font-medium px-3 py-2 rounded-lg border border-border hover:bg-secondary transition-colors"
         >
           <RotateCcw size={14} />
           Reset
