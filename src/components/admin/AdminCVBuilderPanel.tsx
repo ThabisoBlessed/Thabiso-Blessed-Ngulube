@@ -11,7 +11,7 @@ const STORAGE_PREFIX = "cvbuilder_v1_";
 
 const PLACEHOLDER_CV = `# THABISO BLESSED NGULUBE
 ## Software Engineer | Full Stack Engineer
-> Centurion, Gauteng | blessedngust13@gmail.com | +27 74 417 7166 | [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](A collection of production-grade systems I’ve built, including IoT data pipelines, cloud backends, and scalable web applications.
+> Centurion, Gauteng | blessedngust13@gmail.com | +27 74 417 7166 | [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app).
 )
 
 ### PROFESSIONAL SUMMARY
@@ -74,7 +74,7 @@ const PLACEHOLDER_COVER = `# THABISO BLESSED NGULUBE
 >> 📍 Centurion, Gauteng
 >> 📧 blessedngust13@gmail.com
 >> 📞 +27 74 417 7166
->> 🔗 [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](A collection of production-grade systems I’ve built, including IoT data pipelines, cloud backends, and scalable web applications.
+>> 🔗 [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app).
 )
 
 Re: Application for {{Software Engineering role}}
