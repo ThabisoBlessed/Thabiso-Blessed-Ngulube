@@ -22,7 +22,11 @@ Personal portfolio site for **Thabiso Blessed Ngulube**, single-owner. Next.js 1
 - Single source of truth: `PLACEHOLDER_CV` and `PLACEHOLDER_COVER` in `src/components/admin/AdminCVBuilderPanel.tsx`.
 - **Bump `CONTENT_VERSION` whenever either constant changes**, otherwise browsers keep serving the cached copy from localStorage.
 - Writing standard (from the owner's recruiter): every achievement states the task, the goal it achieved, and a measurable result; each employer carries an industry line. Never invent numbers. Use only figures the owner has confirmed (currently: 40+ mine sites, 12+ hours/week of manual reporting removed, sold as a monetised client feature).
+- Layout sizes live in `CV_LAYOUT` at the top of that file and feed both the preview and the PDF stylesheet via `--cv-*` variables. Do not hard-code sizes in the CSS.
 - Markup the renderer understands: `#` name, `##` title, `>` contact, `###` section, `-` bullet, `**bold**`, `*italic*`, `+++` highlight box, `>>` cover-letter contact lines.
+
+## Skills
+Group names and order live in `src/lib/skill-categories.ts`. Add a new group there, not in a component.
 
 ## At the end of a session
 Update `status.md`: what changed, what is still open, any manual steps the owner must do.

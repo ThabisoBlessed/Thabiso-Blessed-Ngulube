@@ -7,9 +7,10 @@ import { FormInput, FormTextarea, SwitchField } from "@/components/ui/form-field
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
+import { SKILL_CATEGORIES, categoryRank } from "@/lib/skill-categories";
 import type { Skill } from "@/types";
 
-const CATEGORIES = ["Languages", "Frontend", "Backend", "Database", "DevOps", "Design", "Other"];
+const CATEGORIES: string[] = [...SKILL_CATEGORIES];
 
 const emptySkill = (): Skill => ({
   id: `skill-${Date.now()}`,
@@ -33,7 +34,7 @@ function SkillForm({ initial, onSave, onCancel }: { initial: Skill; onSave: (s: 
           value={form.category}
           onChange={(e) => set("category", e.target.value)}
         >
-          {CATEGORIES.map((c) => <option key={c} value={c} className="bg-popover">{c}</option>)}
+          {(CATEGORIES.includes(form.category) ? CATEGORIES : [form.category, ...CATEGORIES]).map((c) => <option key={c} value={c} className="bg-popover">{c}</option>)}
         </select>
       </div>
 
@@ -52,7 +53,7 @@ export function AdminSkillsPanel() {
   const [editTarget, setEditTarget] = useState<Skill | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
-  const categories = [...new Set(skills.map((s) => s.category))];
+  const categories = [...new Set(skills.map((s) => s.category))].sort((a, b) => categoryRank(a) - categoryRank(b));
 
   return (
     <div className="space-y-5">

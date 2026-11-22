@@ -58,6 +58,20 @@ Repo: originally a multi-tenant portfolio SaaS ("folio."), being converted into 
 - **Media is copied into your own storage folder** at link time (thumbnail + screenshots/videos): downloaded from the public URL and re-uploaded to `portfolio-files/<your id>/linked/…`, so deleting the original user no longer breaks them. Needs no new storage policy (uses your existing upload permission). External URLs are left alone; failures keep the original URL and are counted in the result message.
 - Note: the owner gate is app logic, not RLS. It is not a security boundary (any user can already write their own portfolio row); the real protection is that the copy only ever goes into the caller's own row.
 
+### 5. Recovered old projects (2026-11-22)
+- Diagnosis: the old account's storage folder (`eb4ba27c…`, 54 files, 113 MB) survived but its profile and portfolio row were deleted, so the projects' text was gone. There is no `projects` table (only `profiles` and `portfolios`).
+- `recover-old-projects.sql` rebuilt four projects from the file names: **OmniNexos**, **Omniscience**, **Learning Management System**, and a **hidden** "Unsorted screenshots (review me)". Run on the live DB and confirmed. Idempotent. Files were not moved; the projects point at the old folder's public URLs.
+- **Still to do by hand:** descriptions, categories and tech stacks are drafts inferred from file names. Move the 5 unsorted screenshots into the right project, then delete that entry. If a `.mov` will not play in Chrome/Firefox, convert it to `.mp4`.
+
+### 6. CV fit fix + CV_LAYOUT (2026-11-22)
+- **Bug fixed:** the auto-fit measured at full size, shrank, then widened the box, so text reflowed shorter than measured. Result: over-shrunk ("squinted") text and white space under the content. It now searches for the largest scale that fits at its real final width.
+- **`CV_LAYOUT`** (top of `AdminCVBuilderPanel.tsx`) holds every size you can tune (margins, font sizes, line height, column ratio, gaps, `minScale`). It feeds both the preview and the PDF stylesheet through `--cv-*` CSS variables. A "Page fit: NN%" line under the toolbar shows how much the page is shrinking and warns when content is clipped.
+- Not visually rendered in a browser here (type-check and build only): check the preview after pasting.
+
+### 7. Skills regrouping (2026-11-22)
+- New groups, in display order, in `src/lib/skill-categories.ts`: Languages, Frontend, Mobile, Backend & APIs, Databases, Cloud, DevOps, **AI & LLM Engineering**, **Architecture & Real-Time Systems**. The public Skills section and Admin → Skills both follow this order; unknown older categories sort last.
+- `skills-regroup.sql` replaces the live skills list with the regrouped set (46 skills). Items beyond the original list were taken from the CV: Tailwind CSS, Django, MongoDB, Redis, EC2, DigitalOcean, CI/CD, Linux, Git, Tool-Calling Agents, OpenAI API, Ollama, MQTT, Real-Time Data Pipelines. Delete any you do not want in Admin → Skills.
+
 ### Verification
 `npx tsc --noEmit` clean; `npx next build` succeeds; ESLint: no new errors (remaining errors are the same ones present in the original upload).
 

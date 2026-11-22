@@ -449,9 +449,69 @@ function renderDoc(raw: string, type: DocType): string {
   return html;
 }
 
-// A4 content height in px at 96dpi minus the 8mm top+bottom padding
-// (297mm ≈ 1122.5px, 8mm*2 ≈ 60.5px of padding removed from the box we measure)
-const PAGE_CONTENT_HEIGHT_PX = 1122.5 - 60.5;
+// ═══════════════════════════════════════════════════════════════════════════
+//  CV LAYOUT: the knobs you can turn. Change a number, save, and both the
+//  preview and the downloaded PDF follow (they share these values).
+//  Sizes: pt = print points, px = pixels, mm = millimetres.
+//  Tip: the CV is auto-shrunk to fit ONE page. If text looks squinted, make
+//  the content shorter or the numbers below smaller, rather than relying on
+//  the shrink. "Page fit" under the toolbar shows how much it is shrinking.
+// ═══════════════════════════════════════════════════════════════════════════
+const CV_LAYOUT = {
+  // Auto-fit
+  minScale: 0.55,            // shrink floor. Raise (e.g. 0.8) to stop tiny text; content is clipped instead
+  // Page margins (applies to CV and cover letter)
+  padTopBottomMm: 8,         // top/bottom margin. Less = more room, but keep >= 6 for printers
+  padSideMm: 10,             // left/right margin
+  // Body text (base size also drives the cover letter)
+  fontPt: 9.5,               // base text size
+  lineHeight: 1.28,          // line spacing, 1.2 tight, 1.4 airy
+  bulletFontPt: 9,           // bullets in the wide (main) column
+  sideBulletFontPt: 8.5,     // bullets in the narrow (side) column
+  // Header
+  nameFontPt: 19,
+  titleFontPt: 10.5,
+  metaFontPt: 8.5,           // contact line
+  // Section headings
+  sectionTitlePt: 9.5,       // main column
+  sideSectionTitlePt: 8.5,   // side column
+  // Columns
+  columnGapPx: 20,           // space between main and side column
+  mainColumnWeight: 1.62,    // main : side width ratio. Raise main to give experience more room
+  sideColumnWeight: 1,
+  // Vertical rhythm (the main way to trade space for density)
+  sectionGapPx: 12,          // space between sections
+  bulletGapPx: 3,            // space between bullets
+  paragraphGapPx: 4,         // space after paragraphs
+} as const;
+
+// Exposed to the CSS as custom properties (--cv-*), so the preview and the
+// print stylesheet below read the same numbers.
+const CV_VARS: Record<string, string> = {
+  "--cv-pad": `${CV_LAYOUT.padTopBottomMm}mm ${CV_LAYOUT.padSideMm}mm`,
+  "--cv-font": `${CV_LAYOUT.fontPt}pt`,
+  "--cv-line": `${CV_LAYOUT.lineHeight}`,
+  "--cv-li": `${CV_LAYOUT.bulletFontPt}pt`,
+  "--cv-side-li": `${CV_LAYOUT.sideBulletFontPt}pt`,
+  "--cv-name": `${CV_LAYOUT.nameFontPt}pt`,
+  "--cv-title": `${CV_LAYOUT.titleFontPt}pt`,
+  "--cv-meta": `${CV_LAYOUT.metaFontPt}pt`,
+  "--cv-sec-title": `${CV_LAYOUT.sectionTitlePt}pt`,
+  "--cv-side-sec-title": `${CV_LAYOUT.sideSectionTitlePt}pt`,
+  "--cv-col-gap": `${CV_LAYOUT.columnGapPx}px`,
+  "--cv-main-flex": `${CV_LAYOUT.mainColumnWeight}`,
+  "--cv-side-flex": `${CV_LAYOUT.sideColumnWeight}`,
+  "--cv-section-gap": `${CV_LAYOUT.sectionGapPx}px`,
+  "--cv-li-gap": `${CV_LAYOUT.bulletGapPx}px`,
+  "--cv-p-gap": `${CV_LAYOUT.paragraphGapPx}px`,
+};
+const CV_VARS_CSS = Object.entries(CV_VARS)
+  .map(([k, v]) => `${k}: ${v};`)
+  .join(" ");
+
+// A4 is 297mm tall (≈1122.5px at 96dpi); the content box is that minus the
+// top and bottom margin.
+const PAGE_CONTENT_HEIGHT_PX = ((297 - 2 * CV_LAYOUT.padTopBottomMm) * 96) / 25.4;
 
 // Plain-string duplicate of the core .cv-page rules below, used to build a
 // fully standalone print document (see handleDownload). Keep this in sync
@@ -461,16 +521,17 @@ const PRINT_CSS = `
   html, body { margin: 0; padding: 0; background: #fff; }
   @page { margin: 0; size: A4; }
   .cv-page {
+    ${CV_VARS_CSS}
     background: #fff;
     color: #000;
     width: 210mm;
     height: 297mm;
     overflow: hidden;
     box-sizing: border-box;
-    padding: 8mm 10mm;
+    padding: var(--cv-pad);
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 9.5pt;
-    line-height: 1.28;
+    font-size: var(--cv-font);
+    line-height: var(--cv-line);
     position: relative;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -493,20 +554,20 @@ const PRINT_CSS = `
   .cv-page .cover-header-right .contact-line a { color: #fff; text-decoration: none; }
   .cv-page .cover-header + p { border-bottom: 1px solid #1f3a63; padding-bottom: 8px; margin-bottom: 10px; }
   .cv-page .cv2-header { border-bottom: 2px solid #16284a; padding-bottom: 10px; margin-bottom: 14px; }
-  .cv-page .cv2-name { font-size: 19pt; font-weight: bold; margin: 0; color: #16284a; letter-spacing: 0.02em; }
-  .cv-page .cv2-title { font-size: 10.5pt; font-weight: 600; color: #0c447c; margin: 3px 0 6px; text-transform: uppercase; letter-spacing: 0.03em; }
-  .cv-page .cv2-meta { font-size: 8.5pt; color: #444; margin: 0; }
+  .cv-page .cv2-name { font-size: var(--cv-name); font-weight: bold; margin: 0; color: #16284a; letter-spacing: 0.02em; }
+  .cv-page .cv2-title { font-size: var(--cv-title); font-weight: 600; color: #0c447c; margin: 3px 0 6px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .cv-page .cv2-meta { font-size: var(--cv-meta); color: #444; margin: 0; }
   .cv-page .cv2-meta a { color: #444; text-decoration: underline; }
-  .cv-page .cv2-body { display: flex; gap: 20px; align-items: stretch; }
-  .cv-page .cv2-main { flex: 1.62; min-width: 0; }
-  .cv-page .cv2-side { flex: 1; min-width: 0; border-left: 1px solid #d8dee8; padding-left: 16px; }
-  .cv-page .cv2-section { margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
-  .cv-page .cv2-sec-title { font-size: 9.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #16284a; border-bottom: 1.5px solid #16284a; padding-bottom: 3px; margin-bottom: 6px; }
-  .cv-page .cv2-side .cv2-sec-title { font-size: 8.5pt; }
-  .cv-page .cv2-body p { margin: 0 0 4px; }
+  .cv-page .cv2-body { display: flex; gap: var(--cv-col-gap); align-items: stretch; }
+  .cv-page .cv2-main { flex: var(--cv-main-flex); min-width: 0; }
+  .cv-page .cv2-side { flex: var(--cv-side-flex); min-width: 0; border-left: 1px solid #d8dee8; padding-left: 16px; }
+  .cv-page .cv2-section { margin-bottom: var(--cv-section-gap); page-break-inside: avoid; break-inside: avoid; }
+  .cv-page .cv2-sec-title { font-size: var(--cv-sec-title); font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #16284a; border-bottom: 1.5px solid #16284a; padding-bottom: 3px; margin-bottom: 6px; }
+  .cv-page .cv2-side .cv2-sec-title { font-size: var(--cv-side-sec-title); }
+  .cv-page .cv2-body p { margin: 0 0 var(--cv-p-gap); }
   .cv-page .cv2-body ul { list-style: disc; margin: 2px 0 6px 16px; padding: 0 0 0 1em; }
-  .cv-page .cv2-body li { display: list-item; margin-bottom: 3px; font-size: 9pt; }
-  .cv-page .cv2-side li { font-size: 8.5pt; }
+  .cv-page .cv2-body li { display: list-item; margin-bottom: var(--cv-li-gap); font-size: var(--cv-li); }
+  .cv-page .cv2-side li { font-size: var(--cv-side-li); }
   .cv-page .doc-name { font-size: 16pt; font-weight: bold; text-align: center; margin: 0; }
   .cv-page .doc-title { text-align: center; font-size: 10.5pt; margin: 2px 0 6px; }
   .cv-page .doc-meta { text-align: center; font-size: 9pt; color: #222; margin: 0 0 6px; }
@@ -534,6 +595,7 @@ export function AdminCVBuilderPanel() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [overflow, setOverflow] = useState(false);
   // Add to component state
   const [copied, setCopied] = useState(false);
   const promptText =
@@ -549,25 +611,44 @@ export function AdminCVBuilderPanel() {
     setContent({ cv: loadDoc("cv"), cover: loadDoc("cover") });
   }, []);
 
-  // Auto-shrink-to-fit: after every render of the doc content, measure the
-  // natural (unscaled) height of the inner content. If it's taller than one
-  // A4 page, scale it down just enough to fit — forcing everything onto a
-  // single page instead of letting it overflow onto a second one.
+  // Auto-fit to ONE A4 page. We find the largest scale that fits by trying
+  // candidates at their REAL final width (width = 100/scale %). The old version
+  // measured at full size, shrank, then widened the box, so the text re-flowed
+  // into fewer lines than measured: it shrank too much (squinting) and left
+  // white space under the content.
   useEffect(() => {
     const el = innerRef.current;
     if (!el) return;
 
-    // Reset to measure natural height first
-    el.style.transform = "scale(1)";
-    // Force reflow before measuring
-    const naturalHeight = el.scrollHeight;
+    const fits = (sc: number) => {
+      el.style.transform = `scale(${sc})`;
+      el.style.width = `${100 / sc}%`;
+      return el.scrollHeight * sc <= PAGE_CONTENT_HEIGHT_PX;
+    };
 
-    if (naturalHeight > PAGE_CONTENT_HEIGHT_PX) {
-      const nextScale = PAGE_CONTENT_HEIGHT_PX / naturalHeight;
-      setScale(Math.max(nextScale, 0.55)); // floor so text never gets unreadably tiny
-    } else {
-      setScale(1);
+    const floor: number = CV_LAYOUT.minScale;
+    let best = 1;
+    let overflow = false;
+    if (!fits(1)) {
+      if (!fits(floor)) {
+        best = floor;      // still too long at the floor: clipped at the bottom
+        overflow = true;
+      } else {
+        let lo = floor;
+        let hi = 1;
+        for (let i = 0; i < 12; i++) {
+          const mid = (lo + hi) / 2;
+          if (fits(mid)) lo = mid; else hi = mid;
+        }
+        best = lo;
+      }
     }
+    best = Math.floor(best * 1000) / 1000;
+    // Leave the DOM on the chosen scale (the probes above overwrote it).
+    el.style.transform = `scale(${best})`;
+    el.style.width = best < 1 ? `${100 / best}%` : "100%";
+    setScale(best);
+    setOverflow(overflow);
   }, [content, active]);
 
   const updateContent = (type: DocType, value: string) => {
@@ -801,6 +882,15 @@ export function AdminCVBuilderPanel() {
         emphasis. Paste AI-tailored text for any section, then download.
       </p>
 
+      <p className={`text-xs mb-3 ${overflow ? "text-destructive" : "text-muted-foreground"}`}>
+        Page fit: {Math.round(scale * 100)}%
+        {overflow
+          ? " · too long even at the minimum size, so the bottom is cut off. Shorten the text or lower the sizes in CV_LAYOUT."
+          : scale < 1
+            ? " · shrunk to fit one page. Below about 85% the text starts to look small."
+            : " · fits at full size."}
+      </p>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <textarea
           className="w-full h-[70vh] text-sm font-mono p-4 rounded-xl border border-border bg-background resize-none focus:outline-none focus:ring-2 focus:ring-brand/40"
@@ -810,7 +900,7 @@ export function AdminCVBuilderPanel() {
         />
 
         <div className="overflow-y-auto h-[70vh] rounded-xl border border-border bg-secondary/30 flex justify-center p-4">
-          <div id="cv-print-area" className="cv-page">
+          <div id="cv-print-area" className="cv-page" style={CV_VARS as React.CSSProperties}>
             <div
               ref={innerRef}
               className="cv-page-inner"
@@ -834,10 +924,10 @@ export function AdminCVBuilderPanel() {
           height: 297mm;
           overflow: hidden;
           box-sizing: border-box;
-          padding: 8mm 10mm;
+          padding: var(--cv-pad);
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 9.5pt;
-          line-height: 1.28;
+          font-size: var(--cv-font);
+          line-height: var(--cv-line);
           box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
           flex-shrink: 0;
           position: relative;
@@ -918,14 +1008,14 @@ export function AdminCVBuilderPanel() {
           margin-bottom: 14px;
         }
         .cv-page .cv2-name {
-          font-size: 19pt;
+          font-size: var(--cv-name);
           font-weight: bold;
           margin: 0;
           color: #16284a;
           letter-spacing: 0.02em;
         }
         .cv-page .cv2-title {
-          font-size: 10.5pt;
+          font-size: var(--cv-title);
           font-weight: 600;
           color: #0c447c;
           margin: 3px 0 6px;
@@ -933,7 +1023,7 @@ export function AdminCVBuilderPanel() {
           letter-spacing: 0.03em;
         }
         .cv-page .cv2-meta {
-          font-size: 8.5pt;
+          font-size: var(--cv-meta);
           color: #444;
           margin: 0;
         }
@@ -943,26 +1033,26 @@ export function AdminCVBuilderPanel() {
         }
         .cv-page .cv2-body {
           display: flex;
-          gap: 20px;
+          gap: var(--cv-col-gap);
           align-items: stretch;
         }
         .cv-page .cv2-main {
-          flex: 1.62;
+          flex: var(--cv-main-flex);
           min-width: 0;
         }
         .cv-page .cv2-side {
-          flex: 1;
+          flex: var(--cv-side-flex);
           min-width: 0;
           border-left: 1px solid #d8dee8;
           padding-left: 16px;
         }
         .cv-page .cv2-section {
-          margin-bottom: 12px;
+          margin-bottom: var(--cv-section-gap);
           page-break-inside: avoid;
           break-inside: avoid;
         }
         .cv-page .cv2-sec-title {
-          font-size: 9.5pt;
+          font-size: var(--cv-sec-title);
           font-weight: bold;
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -972,10 +1062,10 @@ export function AdminCVBuilderPanel() {
           margin-bottom: 6px;
         }
         .cv-page .cv2-side .cv2-sec-title {
-          font-size: 8.5pt;
+          font-size: var(--cv-side-sec-title);
         }
         .cv-page .cv2-body p {
-          margin: 0 0 4px;
+          margin: 0 0 var(--cv-p-gap);
         }
         .cv-page .cv2-body ul {
           list-style: disc !important;
@@ -984,11 +1074,11 @@ export function AdminCVBuilderPanel() {
         }
         .cv-page .cv2-body li {
           display: list-item !important;
-          margin-bottom: 3px;
-          font-size: 9pt;
+          margin-bottom: var(--cv-li-gap);
+          font-size: var(--cv-li);
         }
         .cv-page .cv2-side li {
-          font-size: 8.5pt;
+          font-size: var(--cv-side-li);
         }
         .cv-page .doc-name {
           font-size: 16pt;

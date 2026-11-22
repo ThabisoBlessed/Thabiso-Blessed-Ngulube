@@ -1,13 +1,14 @@
 "use client";
 import { useAppSelector, selectVisibleSkills, selectSiteSettings } from "@/hooks/redux";
 import { SectionHeader } from "./SectionHeader";
+import { categoryRank } from "@/lib/skill-categories";
 
 export function SkillsSection() {
   const skills   = useAppSelector(selectVisibleSkills);
   const settings = useAppSelector(selectSiteSettings);
   if (!settings.showSections.skills || !skills.length) return null;
 
-  const categories = [...new Set(skills.map((s) => s.category))];
+  const categories = [...new Set(skills.map((s) => s.category))].sort((a, b) => categoryRank(a) - categoryRank(b));
 
   return (
     <section id="skills" className="py-24 px-6 md:px-12 lg:px-24 bg-secondary/40">
