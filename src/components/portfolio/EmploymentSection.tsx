@@ -24,7 +24,7 @@ export function EmploymentSection() {
         {/* Timeline */}
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-brand via-border to-transparent hidden md:block" />
+          <div className="absolute left-6 top-0 bottom-0 w-px bg-linear-to-b from-brand via-border to-transparent hidden md:block" />
 
           <div className="space-y-8">
             {employment.map((emp, i) => (
@@ -37,14 +37,14 @@ export function EmploymentSection() {
 
                 <Card className={`overflow-hidden hover:shadow-lg transition-all duration-300 ${i === 0 ? "border-brand/30" : ""}`}>
                   {i === 0 && (
-                    <div className="h-0.5 w-full bg-gradient-to-r from-brand to-transparent" />
+                    <div className="h-0.5 w-full bg-linear-to-r from-brand to-transparent" />
                   )}
                   <CardContent className="p-6">
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
                       <div className="flex items-start gap-3">
                         {/* Mobile only logo */}
                         <img src={emp.logo} alt={emp.company}
-                          className="w-10 h-10 rounded-xl border border-border object-cover md:hidden flex-shrink-0" />
+                          className="w-10 h-10 rounded-xl border border-border object-cover md:hidden shrink-0" />
                         <div>
                           <div className="flex flex-wrap items-center gap-2 mb-0.5">
                             <h3 className="font-heading font-bold text-foreground text-lg">{emp.role}</h3>
@@ -68,7 +68,7 @@ export function EmploymentSection() {
                     <ul className="space-y-2 mb-5">
                       {emp.achievements.map((a, idx) => (
                         <li key={idx} className="flex gap-2.5 text-sm">
-                          <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 flex-shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
                           <span className="text-muted-foreground">{a}</span>
                         </li>
                       ))}

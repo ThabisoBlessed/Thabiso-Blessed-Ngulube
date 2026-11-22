@@ -18,9 +18,26 @@ export const selectVisibleSkills = createSelector(
   (skills) => skills.filter((sk) => sk.isVisible)
 );
 
+// Experience is always shown current role first, then newest to oldest.
+// Dates are "YYYY-MM" strings, so plain string comparison orders them correctly.
+// A role with no end date is current; ties fall back to the later start date.
+type Dated = { startDate: string; endDate: string | null };
+export const compareEmployment = (a: Dated, b: Dated): number => {
+  const aCurrent = !a.endDate;
+  const bCurrent = !b.endDate;
+  if (aCurrent !== bCurrent) return aCurrent ? -1 : 1;
+  if (!aCurrent && a.endDate !== b.endDate) return (b.endDate ?? "").localeCompare(a.endDate ?? "");
+  return (b.startDate ?? "").localeCompare(a.startDate ?? "");
+};
+
+export const selectSortedEmployment = createSelector(
+  (s: RootState) => s.portfolio.employment,
+  (emp) => [...emp].sort(compareEmployment)
+);
+
 export const selectVisibleEmployment = createSelector(
   (s: RootState) => s.portfolio.employment,
-  (emp) => emp.filter((e) => e.isVisible)
+  (emp) => emp.filter((e) => e.isVisible).sort(compareEmployment)
 );
 
 export const selectVisibleProjects = createSelector(

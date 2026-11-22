@@ -128,7 +128,7 @@ function ProfileCard({
           </p>
         </div>
         {openToWork && (
-          <span className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-brand/10 border border-brand/20 text-xs font-semibold text-brand flex-shrink-0">
+          <span className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-brand/10 border border-brand/20 text-xs font-semibold text-brand shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
             Open
           </span>

@@ -72,7 +72,7 @@ export function DocumentsSection() {
                       </div>
                       {doc.fileUrl && (
                         <a href={doc.fileUrl} target="_blank" rel="noreferrer"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">
+                          className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-brand">
                             <Download size={13} />
                           </Button>
@@ -101,15 +101,15 @@ export function TestimonialsSection() {
         <div className="grid md:grid-cols-2 gap-6">
           {testimonials.map((t) => (
             <Card key={t.id} className="hover:shadow-md hover:border-brand/20 transition-all duration-300 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-brand to-transparent" />
+              <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-brand to-transparent" />
               <CardContent className="p-6 pl-7">
                 <Quote size={28} className="text-brand/20 mb-4" />
-                <p className="text-muted-foreground leading-relaxed italic mb-6 break-words">"{t.text}"</p>
+                <p className="text-muted-foreground leading-relaxed italic mb-6 wrap-break-word">"{t.text}"</p>
                 <div className="flex flex-wrap items-center gap-3">
                   <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full border-2 border-brand/20" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground break-words">{t.name}</p>
-                    <p className="text-xs text-muted-foreground break-words">{t.role} · {t.company}</p>
+                    <p className="text-sm font-semibold text-foreground wrap-break-word">{t.name}</p>
+                    <p className="text-xs text-muted-foreground wrap-break-word">{t.role} · {t.company}</p>
                   </div>
                   <div className="ml-auto flex gap-0.5">
                     {Array.from({ length: t.rating }).map((_, i) => (
@@ -148,14 +148,14 @@ export function ImpactSection() {
           {metrics.map((m) => (
             <div key={m.id}
               className="group rounded-2xl border border-border bg-card p-6 hover:border-brand/30 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
-                <p className="font-heading font-extrabold text-4xl md:text-5xl text-brand leading-none mb-2 break-words">
+                <p className="font-heading font-extrabold text-4xl md:text-5xl text-brand leading-none mb-2 wrap-break-word">
                   {m.value}
                 </p>
-                <p className="font-semibold text-foreground text-sm break-words">{m.label}</p>
+                <p className="font-semibold text-foreground text-sm wrap-break-word">{m.label}</p>
                 {m.description && (
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed break-words">{m.description}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed wrap-break-word">{m.description}</p>
                 )}
               </div>
             </div>
@@ -191,7 +191,7 @@ export function ContactSection() {
           Send Email
         </a>
 
-        <p className="text-muted-foreground text-sm pt-2 break-words">{hero.email}</p>
+        <p className="text-muted-foreground text-sm pt-2 wrap-break-word">{hero.email}</p>
       </div>
     </section>
   );

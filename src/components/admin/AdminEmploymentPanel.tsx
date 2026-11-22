@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector, selectSortedEmployment } from "@/hooks/redux";
 import { addEmployment, updateEmployment, removeEmployment, toggleEmploymentVisibility } from "@/store/slices/portfolioSlice";
 import { Button } from "@/components/ui/button";
 import { FormInput, FormTextarea, SwitchField } from "@/components/ui/form-field";
@@ -124,7 +124,7 @@ function EmploymentForm({ initial, onSave, onCancel }: { initial: Employment; on
 
 export function AdminEmploymentPanel() {
   const dispatch = useAppDispatch();
-  const employment = useAppSelector((s) => s.portfolio.employment);
+  const employment = useAppSelector(selectSortedEmployment);
   const [editTarget, setEditTarget] = useState<Employment | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
