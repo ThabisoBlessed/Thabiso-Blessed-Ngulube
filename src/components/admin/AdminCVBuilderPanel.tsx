@@ -14,14 +14,14 @@ const PLACEHOLDER_CV = `# THABISO BLESSED NGULUBE
 > Centurion, Gauteng | blessedngust13@gmail.com | +27 74 417 7166 | [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app)
 
 ### PROFESSIONAL SUMMARY
-Lead Software Engineer at Massive Group Pty Ltd, a mining technology company serving the coal mining industry, building enterprise-grade web and mobile applications with a strong focus on real-time IoT systems, data pipelines, and cloud-native architectures. Built an automated reporting pipeline that eliminated 12+ hours of manual report compilation per week across 40+ mine sites, moving control rooms from reactive reporting to proactive client service, and is now sold as a monetised feature of the company's client offering. Proven ability to design real-time data pipelines, integrate third-party APIs, and deploy scalable cloud solutions using AWS, Docker, and CI/CD. Recently applied the same approach to LLM tooling, building a tool-calling AI agent that answers operational questions from live production data.
+Lead Software Engineer at Massive Group Pty Ltd, a mining technology company serving the coal mining industry, building enterprise-grade web and mobile applications, including offline-capable field apps that keep working with no network, with a strong focus on real-time IoT systems, data pipelines, and cloud-native architectures. Built an automated reporting pipeline that eliminated 12+ hours of manual report compilation per week across 40+ mine sites, moving control rooms from reactive reporting to proactive client service, and is now sold as a monetised feature of the company's client offering. Proven ability to design real-time data pipelines, integrate third-party APIs, and deploy scalable cloud solutions using AWS, Docker, and CI/CD. Recently applied the same approach to LLM tooling, building a tool-calling AI agent that answers operational questions from live production data.
 
 ### KEY PROJECTS
 **Automated Reporting Engine** — Automated hourly, shift, and event-based reporting (PDF and Telegram bot) that was previously compiled manually for about 40 sites, saving 12+ hours of work per week. Control rooms no longer spend time compiling reports and can now act proactively on client requests. Deployed across 40+ mine sites and sold as a monetised feature of the company's client offering.
 
 **IoT Telemetry Platform** — Designed a real-time PLC data pipeline using MQTT and Redis, turning high-volume sensor streams from mining equipment into live dashboards, so field operations teams can monitor production as it happens rather than after the fact.
 
-**Cross-Platform Field App** — Shipped a React Native inspections app syncing with the CRM/Inventory backend, replacing manual inspection capture for on-site technicians across multiple sites, used daily.
+**Cross-Platform Field App** — Shipped an offline-capable React Native inspections app that keeps working with no network connection and syncs with the CRM/Inventory backend, replacing manual inspection capture for on-site technicians across multiple sites, used daily.
 
 **MineOps AI** — Built a tool-calling LLM agent (FastAPI, Pydantic v2, PostgreSQL) that answers plain-English questions about live production data, so non-technical staff get grounded answers instantly instead of waiting on a manual report.
 
@@ -40,7 +40,7 @@ Lead Software Engineer at Massive Group Pty Ltd, a mining technology company ser
 - Led development and owned architecture of enterprise platforms across CRM, HR, Inventory, Inspections, LMS, and IoT workflows, collaborating with cross-functional teams in the mining technology sector.
 - Automated hourly, shift, and event-based site reporting that was previously compiled manually for about 40 sites, eliminating 12+ hours of manual work per week. This freed control rooms to respond proactively to client requests instead of reactively. Rolled out across 40+ mine sites and sold as a monetised feature of the department's client offering.
 - Diagnosed and fixed a recurring database performance issue causing intermittent report failures across multiple sites, tracing it to an index-order mismatch and uncoordinated query concurrency. Restored reliable reporting at every affected site without a database migration.
-- Built React Native mobile apps and Next.js dashboards giving field teams real-time KPI reporting and operational visibility.
+- Built offline-capable React Native mobile apps that keep working with no network connection, so field work is never blocked by lost connectivity, alongside Next.js dashboards giving field teams real-time KPI reporting and operational visibility.
 - Designed IoT data pipelines using Redis, MQTT, and FastAPI to process PLC telemetry into live production figures.
 - Integrated Xero, ClickUp, Slack, and Telegram APIs to automate manual workflows, and built PDF reporting engines with real-time data delivery.
 - Deployed containerized microservices with Docker and CI/CD pipelines, improving deployment reliability and reducing release friction across multiple services.
@@ -92,7 +92,7 @@ I'm a Lead Software Engineer at Massive Group, a mining technology company servi
 
 My most measurable result is an automated reporting engine. Hourly, shift, and event-based reports for about 40 sites were compiled by hand, which took more than 12 hours every week. I automated the whole process, with delivery by PDF and Telegram bot, and it now runs across 40+ mine sites and is sold as a monetised feature of our client offering. The bigger win is where that time went: control rooms no longer spend their shifts compiling reports, so they can respond to client requests proactively instead of reactively.
 
-I also fix what costs reliability. When intermittent report failures hit several sites, I traced them to an index-order mismatch and uncoordinated query concurrency in PostgreSQL and resolved them without a database migration. I designed a real-time PLC telemetry pipeline (MQTT, Redis, FastAPI) that feeds live production dashboards, and shipped a React Native inspections app that on-site technicians use daily. Most recently I built MineOps AI, a tool-calling LLM agent (FastAPI, Pydantic v2, PostgreSQL) that lets non-technical staff ask plain-English questions about live production data and get grounded answers without waiting for a manual report.
+I also fix what costs reliability. When intermittent report failures hit several sites, I traced them to an index-order mismatch and uncoordinated query concurrency in PostgreSQL and resolved them without a database migration. I designed a real-time PLC telemetry pipeline (MQTT, Redis, FastAPI) that feeds live production dashboards, and shipped an offline-capable React Native inspections app that on-site technicians use daily, including where there is no network. Most recently I built MineOps AI, a tool-calling LLM agent (FastAPI, Pydantic v2, PostgreSQL) that lets non-technical staff ask plain-English questions about live production data and get grounded answers without waiting for a manual report.
 
 My background is full stack: React, Next.js, and Node.js on the front end, Python with Django and FastAPI on the back end, Docker and CI/CD on AWS for deployment, and integrations with Xero, ClickUp, Slack, and Telegram. Earlier roles at Biztweak, an enterprise SaaS platform for SME development programmes, and at a digital agency gave me a grounding in Agile delivery.
 
@@ -104,6 +104,7 @@ I'm drawn to organisations solving real operational problems with technology, an
 - Control rooms moved from reactive reporting to proactive client service
 - Recurring cross-site report failures fixed without a database migration
 - Real-time PLC telemetry pipeline (MQTT, Redis, FastAPI) feeding live production dashboards
+- Offline-capable React Native field app that keeps working with no network connection
 - LLM tool-calling agent giving non-technical staff instant, grounded answers from live data
 - Full stack delivery: React, Next.js, React Native, Node.js, Python, Docker, AWS, CI/CD
 - ECSA Registered Candidate Engineering Technologist
@@ -118,7 +119,7 @@ Kind Regards,
 Lead Software Engineer
 blessedngust13@gmail.com | +27 74 417 7166`;
 
-const CONTENT_VERSION = "v7";
+const CONTENT_VERSION = "v8";
 
 function loadDoc(type: DocType): string {
   if (typeof window === "undefined") return "";
