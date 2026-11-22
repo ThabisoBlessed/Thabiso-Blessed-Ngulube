@@ -228,6 +228,7 @@ export function AdminProjectsPanel() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">
+                {proj.linkedFrom && <Badge variant="outline" className="text-xs">Linked · @{proj.linkedFrom.username}</Badge>}
                 {proj.techStack.slice(0, 3).map((t) => <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>)}
                 {proj.media.length > 0 && <Badge variant="outline" className="text-xs">{proj.media.length} media</Badge>}
                 {(proj.snippets || []).length > 0 && <Badge variant="outline" className="text-xs"><Code2 size={9} className="mr-1" />{proj.snippets.length}</Badge>}

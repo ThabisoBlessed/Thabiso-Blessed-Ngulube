@@ -10,44 +10,54 @@ type DocType = "cv" | "cover";
 const STORAGE_PREFIX = "cvbuilder_v1_";
 
 const PLACEHOLDER_CV = `# THABISO BLESSED NGULUBE
-## Software Engineer | Full Stack Engineer
-> Centurion, Gauteng | blessedngust13@gmail.com | +27 74 417 7166 | [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app).
-)
+## Lead Software Engineer | Cloud-Native & IoT Systems | Enterprise Platform Architecture
+> Centurion, Gauteng | blessedngust13@gmail.com | +27 74 417 7166 | [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app)
 
 ### PROFESSIONAL SUMMARY
-Lead Software Engineer at Massive Pty Ltd, building enterprise-grade web and mobile applications with a strong focus on real-time IoT systems, data pipelines, and cloud-native architectures. Proven ability to design and implement real-time data pipelines, integrate third-party APIs, and deploy scalable cloud solutions using AWS, Docker, and CI/CD pipelines.
+Lead Software Engineer at Massive Group Pty Ltd, a mining technology company serving the coal mining industry, building enterprise-grade web and mobile applications with a strong focus on real-time IoT systems, data pipelines, and cloud-native architectures. Built an automated reporting pipeline that eliminated 12+ hours of manual report compilation per week across 40+ mine sites, moving control rooms from reactive reporting to proactive client service, and is now sold as a monetised feature of the company's client offering. Proven ability to design real-time data pipelines, integrate third-party APIs, and deploy scalable cloud solutions using AWS, Docker, and CI/CD. Recently applied the same approach to LLM tooling, building a tool-calling AI agent that answers operational questions from live production data.
 
 ### KEY PROJECTS
-**IoT Telemetry Platform** — Designed a real-time PLC data pipeline using MQTT and Redis, processing high-volume sensor streams from mining equipment into live dashboards used by field operations teams.
-**Automated Reporting Engine** — Built a PDF generation and Telegram-bot delivery system that replaced manual weekly reporting, saving hours of admin work per week.
-**Cross-Platform Field App** — Shipped a React Native inspections app syncing with the CRM/Inventory backend, used daily by on-site technicians across multiple sites.
+**Automated Reporting Engine** — Automated hourly, shift, and event-based reporting (PDF and Telegram bot) that was previously compiled manually for about 40 sites, saving 12+ hours of work per week. Control rooms no longer spend time compiling reports and can now act proactively on client requests. Deployed across 40+ mine sites and sold as a monetised feature of the company's client offering.
+
+**IoT Telemetry Platform** — Designed a real-time PLC data pipeline using MQTT and Redis, turning high-volume sensor streams from mining equipment into live dashboards, so field operations teams can monitor production as it happens rather than after the fact.
+
+**Cross-Platform Field App** — Shipped a React Native inspections app syncing with the CRM/Inventory backend, replacing manual inspection capture for on-site technicians across multiple sites, used daily.
+
+**MineOps AI** — Built a tool-calling LLM agent (FastAPI, Pydantic v2, PostgreSQL) that answers plain-English questions about live production data, so non-technical staff get grounded answers instantly instead of waiting on a manual report.
 
 ### TECHNICAL SKILLS
 - **Frontend:** React, Next.js, React Native, Angular, Tailwind CSS, HTML5, CSS3, TypeScript, JavaScript
-- **Backend:** Node.js, Express.js, Python, FastApi, Flask, Redis, MQTT
-- **Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition),Digital Ocean (Managed Databases) Docker, CI/CD, Linux
-- **Databases:** PostgreSQL, MySQL, MongoDB, DynamoDB
+- **Backend:** Node.js, Express.js, Python, FastAPI, Pydantic v2, Django, Flask, Redis, MQTT
+- **AI / LLM:** OpenAI API, Ollama, LLM tool-calling / function-calling agent design, provider-agnostic model gateway architecture
+- **Cloud & DevOps:** AWS (EC2, Lambda, S3, DynamoDB, Amplify, Rekognition), Digital Ocean (Managed Databases), Docker, CI/CD, Linux
+- **Databases:** PostgreSQL (raw SQL, query optimization, connection pooling), MySQL, MongoDB, DynamoDB
 - **APIs & Integrations:** Xero, ClickUp, Slack, Telegram, RESTful APIs, Real-Time Data Services
-- **Testing & Tools:** Jest, Postman, Git
+- **Testing & Tools:** Pytest, Jest, Postman, Git
 
 ### PROFESSIONAL EXPERIENCE
 **Lead Software Engineer | Massive Group Pty Ltd, Centurion** — June 2023 – Present
+*Industry: Coal mining technology — real-time production monitoring and reporting for mining operations*
 - Led development and owned architecture of enterprise platforms across CRM, HR, Inventory, Inspections, LMS, and IoT workflows, collaborating with cross-functional teams in the mining technology sector.
-- Built React Native mobile apps and Next.js dashboards enabling real-time KPI reporting and operational visibility for field teams; designed IoT data pipelines using Redis, MQTT, and FastApi for PLC telemetry processing.
-- Integrated Xero, ClickUp, Slack, and Telegram APIs for automation; built automated PDF reporting engines with real-time data delivery.
-- Deployed containerized microservices with Docker and CI/CD pipelines, improving deployment reliability and reducing release friction across multiple services
+- Automated hourly, shift, and event-based site reporting that was previously compiled manually for about 40 sites, eliminating 12+ hours of manual work per week. This freed control rooms to respond proactively to client requests instead of reactively. Rolled out across 40+ mine sites and sold as a monetised feature of the department's client offering.
+- Diagnosed and fixed a recurring database performance issue causing intermittent report failures across multiple sites, tracing it to an index-order mismatch and uncoordinated query concurrency. Restored reliable reporting at every affected site without a database migration.
+- Built React Native mobile apps and Next.js dashboards giving field teams real-time KPI reporting and operational visibility.
+- Designed IoT data pipelines using Redis, MQTT, and FastAPI to process PLC telemetry into live production figures.
+- Integrated Xero, ClickUp, Slack, and Telegram APIs to automate manual workflows, and built PDF reporting engines with real-time data delivery.
+- Deployed containerized microservices with Docker and CI/CD pipelines, improving deployment reliability and reducing release friction across multiple services.
 - Designed and maintained PostgreSQL and MongoDB data models supporting CRM, HR, and Inventory modules, optimizing queries for dashboards handling thousands of daily records.
 
 **Full Stack Developer | Biztweak Pty Ltd, Johannesburg** — Feb 2023 – May 2023
-- Improved MERN stack applications, UI responsiveness, and backend performance; enhanced Tailwind CSS interfaces and supported deployment pipelines.
-- Collaborated with developers and stakeholders to deliver production-ready features, contributing to code quality, testing workflows, and stable releases.
+*Industry: Enterprise SaaS / entrepreneurship and SME development — assessment and data platform used by enterprise and supplier development programs*
+- Improved the MERN stack SaaS platform's UI responsiveness and backend performance, supporting the assessments and reporting that development programs use to track small-business beneficiaries.
 - Refactored legacy Express.js endpoints to RESTful conventions, improving API consistency and reducing frontend integration bugs.
-- Participated in daily stand-ups and sprint planning within an Agile team, consistently delivering tickets within sprint commitments.
+- Enhanced Tailwind CSS interfaces and supported deployment pipelines, contributing to code quality, testing workflows, and stable production releases.
+- Worked in an Agile team (daily stand-ups, sprint planning), consistently delivering tickets within sprint commitments.
 
 **Intern, Full Stack Developer | Ata Hancer Bilisim Teknoloji Ltd, Mersin Turkey** — June 2021 – Aug 2021
-- Built frontend modules, integrated backend APIs, and implemented secure authentication systems.
+*Industry: Digital agency — web design, software development, and mobile applications for business clients*
+- Built frontend modules, integrated backend APIs, and implemented secure authentication systems for client projects.
 - Worked directly with senior engineers to debug production issues, gaining early exposure to real-world deployment processes.
-- Contributed to internal tooling that streamlined the team's manual QA checklist into a semi-automated workflow.
+- Contributed to internal tooling that turned the team's manual QA checklist into a semi-automated workflow.
 
 ### EDUCATION
 B.Sc. in Computer Engineering | European University of Lefke 2018 – 2022
@@ -69,45 +79,46 @@ B.Sc. in Computer Engineering | European University of Lefke 2018 – 2022
 - Turkish (Conversational)`;
 
 const PLACEHOLDER_COVER = `# THABISO BLESSED NGULUBE
-## Full Stack Software Engineer
-## React • Next.js • Node.js • AWS • Docker • FastApi
+## Lead Software Engineer
+## React • Next.js • Node.js • Python • AWS • Docker
 >> 📍 Centurion, Gauteng
 >> 📧 blessedngust13@gmail.com
 >> 📞 +27 74 417 7166
->> 🔗 [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app).
-)
+>> 🔗 [LinkedIn](https://www.linkedin.com/in/thabiso-blessed/) | [GitHub](https://github.com/ThabisoBlessed) | [Portfolio](https://thabiso-blessed-ngulube.vercel.app)
 
-Re: Application for {{Software Engineering role}}
+Dear Hiring Manager,
 
-Dear Hiring Manager's Name,
+I'm a Lead Software Engineer at Massive Group, a mining technology company serving the coal mining industry. I build real-time systems that turn plant and sensor data into reports and dashboards operations teams can act on, and I own the architecture of our enterprise platforms across IoT, CRM, HR, inventory, and inspections.
 
-I'm a Full Stack Engineer building real-time, enterprise-grade systems across IoT, cloud infrastructure, and modern web applications. With 3+ years of hands-on experience delivering production systems using React, Node.js, FastApi, and AWS, I focus on building scalable solutions that directly impact business operations.
+My most measurable result is an automated reporting engine. Hourly, shift, and event-based reports for about 40 sites were compiled by hand, which took more than 12 hours every week. I automated the whole process, with delivery by PDF and Telegram bot, and it now runs across 40+ mine sites and is sold as a monetised feature of our client offering. The bigger win is where that time went: control rooms no longer spend their shifts compiling reports, so they can respond to client requests proactively instead of reactively.
 
-In my current role at Massive Group — a mining technology company — I have built and maintained enterprise applications covering IoT data pipelines, CRM, HR, inventory, and compliance workflows. I architected a real-time data processing system using Redis and MQTT that handles high-volume sensor streams from industrial equipment, and developed an automated PDF reporting engine integrated with the Telegram Bot API that eliminated hours of manual reporting per week.
+I also fix what costs reliability. When intermittent report failures hit several sites, I traced them to an index-order mismatch and uncoordinated query concurrency in PostgreSQL and resolved them without a database migration. I designed a real-time PLC telemetry pipeline (MQTT, Redis, FastAPI) that feeds live production dashboards, and shipped a React Native inspections app that on-site technicians use daily. Most recently I built MineOps AI, a tool-calling LLM agent (FastAPI, Pydantic v2, PostgreSQL) that lets non-technical staff ask plain-English questions about live production data and get grounded answers without waiting for a manual report.
 
-I have strong experience integrating business-critical third-party APIs — including Xero for financial data synchronisation, Slack for automated team notifications, and ClickUp for workflow automation. On the frontend, I build scalable, maintainable UIs using React, Next.js, and Redux Toolkit, and I manage infrastructure using Docker and CI/CD pipelines for reliable deployments on AWS.
+My background is full stack: React, Next.js, and Node.js on the front end, Python with Django and FastAPI on the back end, Docker and CI/CD on AWS for deployment, and integrations with Xero, ClickUp, Slack, and Telegram. Earlier roles at Biztweak, an enterprise SaaS platform for SME development programmes, and at a digital agency gave me a grounding in Agile delivery.
 
-I am particularly drawn to {{[Company Name]}} because [insert a specific reason — e.g. 'your focus on data-driven enterprise solutions aligns directly with the work I am most passionate about']. I thrive in environments where technical challenges are real and the expectation is high-quality, production-ready software.
+I'm drawn to organisations solving real operational problems with technology, and I thrive where the technical challenges are substantial and the expectation is high-quality, production-ready software. I'd welcome the chance to bring that same ownership and technical depth to a new team.
 
-+++ Key highlights I bring to this role:
-- 3+ years delivering scalable full-stack enterprise systems in production
-- Real-time IoT pipeline experience with Redis, MQTT, and PLC integration
-- API integration expertise: Xero, Slack, Telegram, ClickUp
-- Modern frontend: React, Next.js, Redux Toolkit, TypeScript
-- DevOps: Docker, AWS, CI/CD pipelines for production deployments
++++ Key results I bring to this role:
+- 12+ hours of manual reporting removed every week by automating reports for about 40 sites
+- Reporting deployed across 40+ mine sites and sold as a monetised client feature
+- Control rooms moved from reactive reporting to proactive client service
+- Recurring cross-site report failures fixed without a database migration
+- Real-time PLC telemetry pipeline (MQTT, Redis, FastAPI) feeding live production dashboards
+- LLM tool-calling agent giving non-technical staff instant, grounded answers from live data
+- Full stack delivery: React, Next.js, React Native, Node.js, Python, Docker, AWS, CI/CD
 - ECSA Registered Candidate Engineering Technologist
 
-I would welcome the opportunity to discuss how my background and skills can contribute to your team. I am available for an interview at your convenience and can provide references, code samples, or a portfolio walkthrough on request.
+I would welcome the opportunity to discuss how my background can contribute to your team. I am available for an interview at your convenience and can provide references, code samples, or a portfolio walkthrough on request.
 
 Thank you for your time and consideration.
 
 Kind Regards,
 
 **Thabiso Blessed Ngulube**
-{{Full Stack Software Engineer}}
+Lead Software Engineer
 blessedngust13@gmail.com | +27 74 417 7166`;
 
-const CONTENT_VERSION = "v4";
+const CONTENT_VERSION = "v7";
 
 function loadDoc(type: DocType): string {
   if (typeof window === "undefined") return "";
@@ -143,14 +154,31 @@ function extractDocName(raw: string): string {
   return name && name.length > 0 ? name : "My CV";
 }
 
+// Format a name for use as a download filename / PDF title:
+// title-case each word, shorten middle name(s) to a single initial,
+// e.g. "THABISO BLESSED NGULUBE" -> "Thabiso B Ngulube".
+function formatNameForFilename(raw: string): string {
+  const words = raw
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
+  if (words.length <= 2) return words.join(" ");
+  const first = words[0];
+  const last = words[words.length - 1];
+  const middleInitials = words.slice(1, -1).map((w) => w[0]);
+  return [first, ...middleInitials, last].join(" ");
+}
+
 // Escape HTML
 function esc(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-// Inline markup: **bold**, [text](url), and {{accent text}}
+// Inline markup: **bold**, *italic*, [text](url), and {{accent text}}
 function inline(s: string) {
   let out = esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
   out = out.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
@@ -444,6 +472,14 @@ const PRINT_CSS = `
     font-size: 9.5pt;
     line-height: 1.28;
     position: relative;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  .cv-page * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
   }
   .cv-page-inner { transform-origin: top left; }
   .cv-page .cover-header { display: flex; border-radius: 8px; overflow: hidden; margin: 0 0 18px 0; }
@@ -462,7 +498,7 @@ const PRINT_CSS = `
   .cv-page .cv2-meta { font-size: 8.5pt; color: #444; margin: 0; }
   .cv-page .cv2-meta a { color: #444; text-decoration: underline; }
   .cv-page .cv2-body { display: flex; gap: 20px; align-items: stretch; }
-  .cv-page .cv2-main { flex: 1.7; min-width: 0; }
+  .cv-page .cv2-main { flex: 1.62; min-width: 0; }
   .cv-page .cv2-side { flex: 1; min-width: 0; border-left: 1px solid #d8dee8; padding-left: 16px; }
   .cv-page .cv2-section { margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
   .cv-page .cv2-sec-title { font-size: 9.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #16284a; border-bottom: 1.5px solid #16284a; padding-bottom: 3px; margin-bottom: 6px; }
@@ -620,8 +656,8 @@ export function AdminCVBuilderPanel() {
     // in ways we don't control. An iframe containing ONLY the CV markup
     // and its own minimal stylesheet gives the print engine nothing else
     // to react to, so our fixed 210mm x 297mm box prints exactly as shown.
-    const personName = extractDocName(content[active]);
-    const docLabel = active === "cv" ? "CV" : "Cover Letter";
+    const personName = formatNameForFilename(extractDocName(content[active]));
+    const docLabel = active === "cv" ? "Cv" : "Cover Letter";
     const bodyHtml = renderDoc(content[active], active);
     const widthStyle = scale < 1 ? `${100 / scale}%` : "100%";
 
@@ -629,7 +665,7 @@ export function AdminCVBuilderPanel() {
 <html>
 <head>
 <meta charset="utf-8" />
-<title>${personName} - ${docLabel}</title>
+<title>${personName}_${docLabel}</title>
 <style>${PRINT_CSS}</style>
 </head>
 <body>
@@ -656,8 +692,17 @@ export function AdminCVBuilderPanel() {
     iframeDoc.write(doc);
     iframeDoc.close();
 
+    // Browsers derive the suggested "Save as PDF" filename from the
+    // TOP-LEVEL page's document.title, not the iframe's <title> — even
+    // though it's the iframe that's actually printing. So we swap the
+    // real page title out for the duration of the print call and put
+    // it back right after.
+    const originalTitle = document.title;
+    document.title = `${personName}_${docLabel}`;
+
     const cleanup = () => {
       if (iframe.parentNode) document.body.removeChild(iframe);
+      document.title = originalTitle;
     };
 
     iframe.onload = () => {
@@ -902,7 +947,7 @@ export function AdminCVBuilderPanel() {
           align-items: stretch;
         }
         .cv-page .cv2-main {
-          flex: 1.7;
+          flex: 1.62;
           min-width: 0;
         }
         .cv-page .cv2-side {

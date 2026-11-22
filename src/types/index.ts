@@ -70,6 +70,13 @@ export interface Project {
   category: string;
   featured: boolean;
   isVisible: boolean;
+  /** Set when this project was linked in from another user's portfolio (Super Admin → All Projects). */
+  linkedFrom?: {
+    userId: string;
+    username: string;
+    projectId: string;
+    linkedAt: string;
+  };
 }
 
 export interface Education {

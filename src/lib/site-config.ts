@@ -7,3 +7,10 @@
 // so you don't have to touch code).
 export const OWNER_USERNAME =
   process.env.NEXT_PUBLIC_OWNER_USERNAME || "blessedngust13";
+
+// Only this account may link other users' projects into its portfolio
+// (Super Admin → All Projects). Compared case-insensitively against the
+// signed-in user's login email. Override with NEXT_PUBLIC_OWNER_EMAIL.
+export const OWNER_EMAIL = (
+  process.env.NEXT_PUBLIC_OWNER_EMAIL || "blessedngust13@gmail.com"
+).toLowerCase();

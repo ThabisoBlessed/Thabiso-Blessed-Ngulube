@@ -9,6 +9,7 @@ import {
   activateUser, deleteUser, setUserRole, checkIsAdmin,
   type ManagedUser,
 } from "@/lib/admin-api";
+import { AllProjectsPanel } from "@/components/super-admin/AllProjectsPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +19,7 @@ import {
   Shield, Users, Mail, Search, Sun, Moon, LogOut,
   CheckCircle, XCircle, AlertTriangle, Trash2,
   UserPlus, ExternalLink, RefreshCw, Crown,
-  Loader2, Eye, EyeOff, Ban,
+  Loader2, Eye, EyeOff, Ban, FolderOpen,
 } from "lucide-react";
 
 // ── Status badge ──────────────────────────────────────────────────────────────
@@ -321,6 +322,7 @@ export default function SuperAdminPage() {
   const [filter, setFilter]     = useState<"all" | "active" | "suspended" | "blocked">("all");
   const [currentUserId, setCurrentUserId] = useState("");
   const [authorized, setAuthorized]       = useState(false);
+  const [view, setView]                 = useState<"users" | "projects">("users");
 
   // Auth + role check
   useEffect(() => {
@@ -416,6 +418,25 @@ export default function SuperAdminPage() {
 
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
 
+        {/* View switcher */}
+        <div className="inline-flex items-center gap-1 bg-secondary/50 border border-border rounded-lg p-1">
+          {([
+            { id: "users",    label: "Users",        icon: Users },
+            { id: "projects", label: "All Projects", icon: FolderOpen },
+          ] as const).map(({ id, label, icon: Icon }) => (
+            <button key={id} onClick={() => setView(id)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                view === id
+                  ? "bg-background border border-border text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}>
+              <Icon size={13} /> {label}
+            </button>
+          ))}
+        </div>
+
+        {view === "projects" ? <AllProjectsPanel /> : (<>
+
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {[
@@ -503,6 +524,7 @@ export default function SuperAdminPage() {
             Showing {filtered.length} of {users.length} users
           </p>
         )}
+        </>)}
       </div>
     </div>
   );
